@@ -7,7 +7,8 @@
     "normalize": "tsx normalize.ts",
     "grade": "tsx grade.ts",
     "build": "npm run fetch && npm run normalize && npm run grade",
-    "mock": "tsx mock.ts"
+    "mock": "tsx mock.ts",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
