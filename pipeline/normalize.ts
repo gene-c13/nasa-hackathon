@@ -20,6 +20,7 @@ import type {
   Dataset,
 } from '../shared/types.ts'
 import { DOMAIN, HAS_OUTCOME, OUTCOME_CODES } from './domain.ts'
+import { canonicalMaterial } from '../shared/materials.ts'
 import {
   tidy,
   toNumber,
@@ -188,6 +189,7 @@ function processFile(path: string): TestRow[] {
       id: `${accession}-${String(i + 1).padStart(4, '0')}`,
       accession,
       fuel: fuel || 'unspecified',
+      material: canonicalMaterial(fuel),
       phase: domain.phase,
       family: domain.family,
       o2Fraction,
@@ -287,11 +289,13 @@ function main() {
   const dataset: Dataset = {
     investigations,
     tests,
+    coverage: [], // grade.ts fills this
     meta: {
       generatedAt: new Date().toISOString(),
       investigationCount: investigations.length,
       testCount: tests.length,
       numericO2Count: tests.filter((t) => t.o2Fraction !== null).length,
+      materialCount: tests.filter((t) => t.material !== null).length,
       source: 'NASA Physical Science Informatics (PSI)',
       license: 'CC0-1.0',
     },

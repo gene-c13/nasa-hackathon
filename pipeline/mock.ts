@@ -15,6 +15,7 @@ import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { Dataset, Investigation, TestRow, Family } from '../shared/types.ts'
+import { canonicalMaterial } from '../shared/materials.ts'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const OUT = resolve(here, '../shared/data.json')
@@ -131,6 +132,7 @@ const tests: TestRow[] = seeds.map((s, i) => ({
   id: `${s.acc}-${String(i + 1).padStart(3, '0')}`,
   accession: s.acc,
   fuel: s.fuel,
+  material: canonicalMaterial(s.fuel),
   phase: s.phase,
   family: s.family,
   o2Fraction: s.o2,
@@ -153,11 +155,13 @@ const tests: TestRow[] = seeds.map((s, i) => ({
 const dataset: Dataset = {
   investigations,
   tests,
+  coverage: [],
   meta: {
     generatedAt: new Date().toISOString(),
     investigationCount: investigations.length,
     testCount: tests.length,
     numericO2Count: tests.filter((t) => t.o2Fraction !== null).length,
+    materialCount: tests.filter((t) => t.material !== null).length,
     source: 'MOCK DATA — not from PSI. Replace via `npm run build`.',
     license: 'CC0-1.0 (real dataset)',
   },

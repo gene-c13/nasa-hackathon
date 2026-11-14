@@ -30,7 +30,14 @@ export interface TestRow {
   /** Stable id, e.g. "PSI-69-012" */
   id: string
   accession: string
+  /** Fuel string exactly as the source CSV spells it. */
   fuel: string
+  /**
+   * Canonical material, e.g. "PMMA", resolved from `fuel` by materials.ts.
+   * null when the row is setup/calibration rather than a burn, or when the
+   * material is unrecognised. A null never satisfies an evidence query.
+   */
+  material: string | null
   phase: Phase
   family: Family
 
@@ -91,15 +98,30 @@ export interface EvidenceResult {
   caveat: string | null
 }
 
+/** One cell of the coverage grid: a material at an oxygen level. */
+export interface CoverageCell {
+  material: string
+  family: Family
+  /** Lower edge of the oxygen bin, mole fraction. */
+  o2Bin: number
+  count: number
+  /** Outcome tallies within the cell. */
+  outcomes: Record<string, number>
+}
+
 export interface Dataset {
   investigations: Investigation[]
   tests: TestRow[]
+  /** Precomputed by grade.ts for the gap map. */
+  coverage: CoverageCell[]
   meta: {
     generatedAt: string
     /** Counts we quote in the pitch — generated, never hand-typed. */
     investigationCount: number
     testCount: number
     numericO2Count: number
+    /** Rows resolved to a canonical material. */
+    materialCount: number
     source: string
     license: string
   }
