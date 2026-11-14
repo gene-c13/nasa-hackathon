@@ -6,9 +6,10 @@
     "fetch": "tsx fetch.ts",
     "normalize": "tsx normalize.ts",
     "grade": "tsx grade.ts",
-    "build": "npm run fetch && npm run normalize && npm run grade",
+    "build": "npm run fetch && npm run normalize && npm run grade && npm run enrich",
     "mock": "tsx mock.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "enrich": "tsx enrich.ts"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
