@@ -1,0 +1,11 @@
+{
+  "accession": "PSI-99",
+  "summary": "SAFFIRE-II burned large samples, including silicone and PMMA, in a flow duct on an uncrewed Cygnus after it left the ISS. It measured fire growth and low-gravity flammability limits to check NASA's material selection criteria.",
+  "tags": [
+    "prevention"
+  ],
+  "rationale": "The work centers on material flammability limits and fire growth, with no focus on smoke detection or extinguishing.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:44:04.735Z"
+}

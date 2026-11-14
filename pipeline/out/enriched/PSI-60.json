@@ -1,0 +1,11 @@
+{
+  "accession": "PSI-60",
+  "summary": "Camera images from the SPICE coflow flame experiment were used with soot models to estimate soot temperature and volume. The goal was to explain why soot differs between normal gravity and microgravity flames.",
+  "tags": [
+    "detection"
+  ],
+  "rationale": "The work measures and models soot (smoke) in flames, which is particulate measurement; suppression and prevention are only mentioned as downstream benefits.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:43:46.464Z"
+}

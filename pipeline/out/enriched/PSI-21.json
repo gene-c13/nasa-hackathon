@@ -1,0 +1,11 @@
+{
+  "accession": "PSI-21",
+  "summary": "Methane and ethylene flames burn in a coflow in microgravity aboard the ISS, with fuel dilution and velocity varied to study flame shape, soot, and extinction limits. The data test combustion models, including how diffusion flames go out, which informs fire suppression.",
+  "tags": [
+    "suppression"
+  ],
+  "rationale": "Main focus is extinction limits and soot modeling; the text ties extinction understanding to fire suppression, and soot is measured optically for modeling, not as smoke detection.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:43:03.134Z"
+}

@@ -1,6 +1,11 @@
 node_modules/
 dist/
-pipeline/out/
+# Raw PSI downloads are large and refetchable, so they stay out of the repo.
+# The enrichment cache does not: committing it is what lets anyone reproduce
+# shared/data.json byte for byte without an API key. Git cannot re-include a
+# path whose parent directory is excluded, so out/ is excluded by contents.
+pipeline/out/*
+!pipeline/out/enriched/
 .env
 .env.local
 .DS_Store

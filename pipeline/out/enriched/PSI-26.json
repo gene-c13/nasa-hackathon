@@ -1,0 +1,12 @@
+{
+  "accession": "PSI-26",
+  "summary": "BASS burned cotton-fiberglass fabric, Nomex and Ultem in airflow aboard the ISS to compare flame spread with standard flammability tests. It also tested how well an inert gas, nitrogen, extinguishes flames in microgravity.",
+  "tags": [
+    "prevention",
+    "suppression"
+  ],
+  "rationale": "It studies material flammability and flame spread (prevention) and tests nitrogen extinguishing of flames (suppression).",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:43:26.906Z"
+}

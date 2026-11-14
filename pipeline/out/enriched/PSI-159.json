@@ -1,0 +1,11 @@
+{
+  "accession": "PSI-159",
+  "summary": "ACME CFI-G burns propane, n-butane and n-pentane as spherical cool diffusion flames on the ISS to map where such flames can exist. The data will test cool flame chemistry models, aiding efficient engine design.",
+  "tags": [
+    "prevention"
+  ],
+  "rationale": "The work determines the conditions under which cool flames occur, which is closest to flammability and ignition limits; it covers no smoke measurement or extinguishment.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:42:56.392Z"
+}

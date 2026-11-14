@@ -1,0 +1,12 @@
+{
+  "accession": "PSI-69",
+  "summary": "FLEX burns large liquid fuel droplets in microgravity to find the lowest oxygen level that supports a flame, with and without CO2, He or SF6 suppressants. The results will improve models of flammability and extinction limits for spacecraft fire safety.",
+  "tags": [
+    "suppression",
+    "prevention"
+  ],
+  "rationale": "It tests suppressant effectiveness and extinction (suppression) and maps flammability limits via the Limiting Oxygen Index (prevention).",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:43:56.966Z"
+}

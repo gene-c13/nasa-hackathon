@@ -1,0 +1,12 @@
+{
+  "accession": "PSI-20",
+  "summary": "Gas-fueled burners in the ACME BRE experiment showed steady flames in microgravity without airflow in elevated-oxygen atmospheres, while flames in 21% oxygen self-extinguished. This suggests ventilation shutoff may not stop fires in oxygen-rich spacecraft.",
+  "tags": [
+    "prevention",
+    "suppression"
+  ],
+  "rationale": "The work maps flammability and extinction limits, and notes that ventilation shutoff, a standard fire-suppression step, may fail in elevated oxygen.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:42:59.516Z"
+}

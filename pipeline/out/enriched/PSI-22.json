@@ -1,0 +1,11 @@
+{
+  "accession": "PSI-22",
+  "summary": "Methane and ethylene flames, diluted with nitrogen, were burned in microgravity under a high-voltage field to study ion current, soot and flame stability. It is not aimed at spacecraft use, but may inform electric-field flame control.",
+  "tags": [
+    "suppression"
+  ],
+  "rationale": "The work examines electric-field control of flames, including near-extinction limits, which is closest to suppression rather than detection or ignition prevention.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:43:12.892Z"
+}

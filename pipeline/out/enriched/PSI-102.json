@@ -1,0 +1,11 @@
+{
+  "accession": "PSI-102",
+  "summary": "Crew overheated spacecraft materials in the ISS Glovebox and measured the smoke particles produced, and how two smoke detectors responded. The data gives a low-gravity baseline for judging current and future spacecraft smoke detectors.",
+  "tags": [
+    "detection"
+  ],
+  "rationale": "The investigation is about smoke particle measurement and smoke detector response, with no focus on ignition limits or extinguishing.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:42:18.960Z"
+}

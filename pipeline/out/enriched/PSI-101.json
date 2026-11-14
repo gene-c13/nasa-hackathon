@@ -1,0 +1,11 @@
+{
+  "accession": "PSI-101",
+  "summary": "SAME-R heated materials, including a fire-retardant foam called Pyrell, on the space station to measure smoke particle sizes in low gravity. The data will help judge and improve smoke detectors for future long-duration spacecraft.",
+  "tags": [
+    "detection"
+  ],
+  "rationale": "The investigation measures smoke particle sizes to evaluate and improve spacecraft smoke detectors, which is purely a detection focus.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:42:16.407Z"
+}

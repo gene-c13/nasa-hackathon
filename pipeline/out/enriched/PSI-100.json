@@ -1,0 +1,11 @@
+{
+  "accession": "PSI-100",
+  "summary": "Saffire-III burned SIBAL fabric samples in a sealed Cygnus cargo vehicle after it left the ISS, with airflow either concurrent or opposed. It measured fire growth and low-gravity flammability limits to check NASA's material selection tests.",
+  "tags": [
+    "prevention"
+  ],
+  "rationale": "The study focuses on fire growth and flammability limits to validate material selection criteria, with no smoke detection or extinguishment focus.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:42:13.564Z"
+}

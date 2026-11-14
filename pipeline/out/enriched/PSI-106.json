@@ -1,0 +1,12 @@
+{
+  "accession": "PSI-106",
+  "summary": "SLICE burned methane, ethylene and nitrogen-diluted fuels in a coflow air duct in microgravity to study what keeps laminar flames attached to a burner or lifts them off. It also examined soot and flame length to improve flame models and fire safety.",
+  "tags": [
+    "suppression",
+    "detection"
+  ],
+  "rationale": "Liftoff velocity limits relate to flame stability limits (closest to suppression), and soot formation and measurement fit detection.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:42:27.203Z"
+}

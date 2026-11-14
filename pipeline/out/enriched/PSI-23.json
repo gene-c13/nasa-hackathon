@@ -1,0 +1,11 @@
+{
+  "accession": "PSI-23",
+  "summary": "Spherical gas flames of hydrogen, methane and ethylene, diluted with nitrogen, helium or carbon dioxide, burn in microgravity on a porous burner. Tests measure flame structure and extinction limits to check combustion models.",
+  "tags": [
+    "suppression"
+  ],
+  "rationale": "The work centers on extinction limits and flame structure, which fits suppression, while smoke detection and material flammability are not studied.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:43:19.392Z"
+}

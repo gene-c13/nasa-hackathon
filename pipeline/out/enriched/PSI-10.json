@@ -1,0 +1,12 @@
+{
+  "accession": "PSI-10",
+  "summary": "Researchers burned ethylene and methane in spherical diffusion flames in drop towers and on the ISS, varying dilution, flow and pressure. They measured soot formation limits and extinction limits, which informs how flames behave and go out in microgravity.",
+  "tags": [
+    "detection",
+    "suppression"
+  ],
+  "rationale": "Soot inception and soot volume fraction measurements are particulate-related (detection), and extinction limits relate to suppression.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:42:10.921Z"
+}

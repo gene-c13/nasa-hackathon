@@ -1,0 +1,11 @@
+{
+  "accession": "PSI-47",
+  "summary": "DAFT and DAFT-2 tested a modified TSI P-Trak particle counter in microgravity, using Arizona Red Dust aerosol and a DustTrak for comparison. The aim was to confirm it could reliably measure smoke aerosols for future spacecraft fire detection.",
+  "tags": [
+    "detection"
+  ],
+  "rationale": "The investigation is about validating an aerosol particle counter for smoke measurement, which is detection only.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:43:40.244Z"
+}

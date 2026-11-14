@@ -1,0 +1,11 @@
+{
+  "accession": "PSI-98",
+  "summary": "SAFFIRE-I burned a large cotton-fiberglass fabric sample in a flow duct aboard an unmanned Cygnus vehicle to measure how fast fire grows in microgravity. Results test NASA's material flammability screening and selection criteria for spacecraft.",
+  "tags": [
+    "prevention"
+  ],
+  "rationale": "The study covers flame growth and microgravity flammability limits compared with NASA's screening test, which is material flammability and prevention, with no smoke detection or extinguishment.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:43:59.836Z"
+}

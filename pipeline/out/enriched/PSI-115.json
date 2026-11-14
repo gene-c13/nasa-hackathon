@@ -1,0 +1,11 @@
+{
+  "accession": "PSI-115",
+  "summary": "Numerical simulations compared how dibutyl-phthalate smoke particles form and grow from a heated sample in microgravity versus Earth gravity at low cross-flow speeds. The aim is to explain how buoyancy changes smoke, supporting better smoke detectors.",
+  "tags": [
+    "detection"
+  ],
+  "rationale": "The work models smoke particle formation and size to improve smoke detection, with no focus on ignition limits or extinguishing.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:42:39.664Z"
+}

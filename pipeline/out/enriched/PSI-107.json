@@ -1,0 +1,11 @@
+{
+  "accession": "PSI-107",
+  "summary": "SPICE burned gas-jet flames of methane, ethylene, propane and propylene in the ISS Glovebox, raising fuel flow until each began emitting soot. This improves understanding of soot formation and supports safer spacecraft design.",
+  "tags": [
+    "detection"
+  ],
+  "rationale": "The study measures the smoke point, where flames start emitting soot, which is a smoke and particulate question, with no focus on ignition limits or extinguishment.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:42:36.546Z"
+}

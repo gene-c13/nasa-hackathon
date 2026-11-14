@@ -1,0 +1,11 @@
+{
+  "accession": "PSI-62",
+  "summary": "Researchers built a flamelet-based model of concurrent flame spread over solid fuels like PMMA and wax in microgravity, checked against BASS experiments using two-color tomography of soot and temperature. It aims to predict spacecraft material flammability limits.",
+  "tags": [
+    "prevention"
+  ],
+  "rationale": "The work centers on modeling flame spread and predicting material flammability limits; soot imaging is only a validation tool, not smoke detection.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:43:50.199Z"
+}

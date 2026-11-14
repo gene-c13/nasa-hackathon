@@ -1,0 +1,12 @@
+{
+  "accession": "PSI-117",
+  "summary": "CFD simulations of n-alkane droplet cool flames in microgravity, validated against ISS FLEX data, tested how heating and drift-induced airflow affect ignition, oscillation and extinction. The resulting stability maps support spacecraft fire-safety modeling.",
+  "tags": [
+    "prevention",
+    "suppression"
+  ],
+  "rationale": "The stability maps cover ignition onset (prevention) and quenching or extinction limits (suppression), with no smoke or particulate measurement.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:42:45.061Z"
+}

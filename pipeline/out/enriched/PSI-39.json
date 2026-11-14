@@ -1,0 +1,12 @@
+{
+  "accession": "PSI-39",
+  "summary": "Fuel droplets, mainly n-dodecane, burn as cool flames in the Combustion Integrated Rack across pressures and helium dilution, to see what extinguishes them. The results refine knowledge of microgravity combustion for safer spacecraft design.",
+  "tags": [
+    "suppression",
+    "prevention"
+  ],
+  "rationale": "It studies flame extinction versus droplet size, pressure and dilution (suppression) and cool-flame ignition behavior of fuels (prevention).",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:43:34.221Z"
+}

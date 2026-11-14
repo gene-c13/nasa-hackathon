@@ -1,0 +1,13 @@
+{
+  "accession": "PSI-68",
+  "summary": "FLEX-2 burned single and paired fuel droplets in the Multi-user Droplet Combustion Apparatus, varying pressure, oxygen level, droplet size and flow. It studied flame extinction limits and soot formation to validate droplet combustion models.",
+  "tags": [
+    "suppression",
+    "prevention",
+    "detection"
+  ],
+  "rationale": "Extinction mechanisms and limits fit suppression, flammability limits of droplet arrays fit prevention, and soot formation analysis loosely fits detection (particulate measurement).",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:43:53.484Z"
+}

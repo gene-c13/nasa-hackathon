@@ -1,0 +1,12 @@
+{
+  "accession": "PSI-25",
+  "summary": "BASS-II burned solid fuel samples of various shapes in a small wind tunnel aboard the ISS, varying airflow speed and oxygen level. It studies ignition, flame spread and extinction to help select safer spacecraft materials and improve firefighting.",
+  "tags": [
+    "prevention",
+    "suppression"
+  ],
+  "rationale": "It studies ignition, flame growth and material flammability (prevention) as well as extinction limits and firefighting methods (suppression), with no smoke or particulate measurement.",
+  "model": "claude-sonnet-5-5",
+  "promptVersion": 2,
+  "generatedAt": "2026-11-14T07:43:21.831Z"
+}
