@@ -1,0 +1,22 @@
+{
+  "name": "flamesafe-pipeline",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "fetch": "tsx fetch.ts",
+    "normalize": "tsx normalize.ts",
+    "grade": "tsx grade.ts",
+    "build": "npm run fetch && npm run normalize && npm run grade",
+    "mock": "tsx mock.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/papaparse": "^5.5.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0",
+    "papaparse": "^5.7.1"
+  }
+}
