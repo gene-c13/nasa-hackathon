@@ -11,7 +11,7 @@
  *
  * Run: npm run mock
  */
-import { writeFileSync, mkdirSync } from 'node:fs'
+import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { Dataset, Investigation, TestRow, Family } from '../shared/types.ts'
@@ -161,6 +161,20 @@ const dataset: Dataset = {
     source: 'MOCK DATA — not from PSI. Replace via `npm run build`.',
     license: 'CC0-1.0 (real dataset)',
   },
+}
+
+// Guard: normalize.ts writes real PSI data to the same path. Overwriting it
+// with mock rows by accident would be hard to notice, so require --force.
+if (existsSync(OUT) && !process.argv.includes('--force')) {
+  const current = JSON.parse(readFileSync(OUT, 'utf8')) as Dataset
+  if (!current.meta.source.startsWith('MOCK')) {
+    console.error(
+      `Refusing to overwrite real data at ${OUT}\n` +
+        `  It currently holds ${current.meta.testCount} rows from ${current.meta.source}.\n` +
+        `  Re-run with --force if you really want mock data back.`,
+    )
+    process.exit(1)
+  }
 }
 
 mkdirSync(dirname(OUT), { recursive: true })
