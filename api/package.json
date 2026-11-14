@@ -1,0 +1,17 @@
+{
+  "name": "flamesafe-api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "ask": "tsx cli.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0"
+  }
+}

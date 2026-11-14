@@ -1,0 +1,6 @@
+{
+  "name": "flamesafe-shared",
+  "private": true,
+  "type": "module",
+  "comment": "Declares these files as ES modules. Vite loads them while bundling web/vite.config.ts, and without this it treats them as CommonJS and warns."
+}
