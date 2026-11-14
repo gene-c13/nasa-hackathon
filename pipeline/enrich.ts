@@ -145,7 +145,7 @@ function validate(
 }
 
 async function enrichOne(
-  client: Anthropic,
+  getClient: () => Anthropic,
   record: Record<string, string>,
 ): Promise<{ result: Enriched; tokensIn: number; tokensOut: number; cached: boolean }> {
   const accession = record.accession
@@ -164,7 +164,7 @@ async function enrichOne(
   // Structured outputs rather than tool-calling: this model does not accept
   // tool_choice {type:'tool'}, and a forced schema is a better fit anyway —
   // there is no tool to run, only a shape to fill.
-  const response = await client.messages.parse({
+  const response = await getClient().messages.parse({
     model: MODEL,
     max_tokens: 1024,
     system: SYSTEM,
@@ -246,7 +246,11 @@ async function main() {
     return
   }
 
-  const client = new Anthropic({ apiKey: loadApiKey() })
+  // Lazy: a fully cached build must not require a key. That is the whole
+  // point of committing the cache — anyone can clone and rebuild data.json
+  // without paying for it or needing credentials.
+  let client: Anthropic | null = null
+  const getClient = () => (client ??= new Anthropic({ apiKey: loadApiKey() }))
 
   console.log(`Enriching ${records.length} investigations with ${MODEL}`)
   console.log(FORCE ? '  (--force: ignoring cache)\n' : '  (using cache where present)\n')
@@ -260,7 +264,7 @@ async function main() {
   // Sequential: 24 short calls, and a clean log is worth more than the seconds saved.
   for (const record of records) {
     try {
-      const out = await enrichOne(client, record)
+      const out = await enrichOne(getClient, record)
       enriched.set(record.accession, out.result)
       tokensIn += out.tokensIn
       tokensOut += out.tokensOut
