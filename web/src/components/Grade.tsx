@@ -34,23 +34,20 @@ export function GradeBadge({ grade, size = 'md' }: { grade: Grade; size?: 'md' |
 
   if (grade === 'measured') {
     return (
-      <span className={`${base} rounded-sm bg-measured text-base`} style={{ color: '#06231a' }}>
-        <span aria-hidden>●</span>
+      <span className={`${base} bg-measured text-base`} style={{ color: '#06231a' }}>
         {GRADE_LABEL[grade]}
       </span>
     )
   }
   if (grade === 'bounded') {
     return (
-      <span className={`${base} rounded-sm border border-bounded text-bounded`}>
-        <span aria-hidden>[ ]</span>
+      <span className={`${base} border border-bounded text-bounded`}>
         {GRADE_LABEL[grade]}
       </span>
     )
   }
   return (
-    <span className={`${base} hatch rounded-sm border border-dashed border-nodata text-nodata`}>
-      <span aria-hidden>∅</span>
+    <span className={`${base} hatch border border-dashed border-nodata text-nodata`}>
       {GRADE_LABEL[grade]}
     </span>
   )

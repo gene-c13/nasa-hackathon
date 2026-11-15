@@ -154,7 +154,7 @@ export function AskView({ params }: { params: URLSearchParams }) {
       </section>
 
       <form
-        className="rounded-lg border border-line bg-panel p-4 sm:p-5"
+        className="border-y border-line py-5"
         onSubmit={(e) => {
           e.preventDefault()
           if (draft.trim()) submit(draft)
@@ -168,12 +168,12 @@ export function AskView({ params }: { params: URLSearchParams }) {
               onChange={(e) => setDraft(e.target.value)}
               maxLength={500}
               placeholder="e.g. Has PMMA been tested at 34% oxygen?"
-              className="w-full rounded border border-line-strong bg-raised px-3 py-2 text-base"
+              className="w-full border border-line-strong bg-raised px-3 py-2 text-base"
             />
             <button
               type="submit"
               disabled={!draft.trim()}
-              className="rounded bg-flame px-5 py-2 font-medium text-canvas hover:brightness-110 disabled:opacity-40"
+              className="bg-flame px-5 py-2 font-medium text-canvas hover:brightness-110 disabled:opacity-40"
             >
               Ask
             </button>
@@ -187,7 +187,7 @@ export function AskView({ params }: { params: URLSearchParams }) {
                 key={s}
                 type="button"
                 onClick={() => submit(s)}
-                className={`rounded border px-3 py-1.5 text-left text-sm ${q === s ? 'border-flame text-flame' : 'border-line-strong text-dim hover:text-ink'}`}
+                className={`border px-3 py-1.5 text-left text-sm ${q === s ? 'border-flame text-flame' : 'border-line-strong text-dim hover:text-ink'}`}
               >
                 {s}
               </button>
@@ -219,8 +219,8 @@ function Failed({ message }: { message: string }) {
           ? 'Nothing was guessed in its place. The suggested questions above still work, and the evidence lookup answers the same kind of question without the service.'
           : message}
       </p>
-      <a className="mt-3 inline-block text-flame hover:underline" href={href('evidence')}>
-        Open the evidence lookup →
+      <a className="mt-3 inline-block link" href={href('evidence')}>
+        Open the evidence lookup
       </a>
     </div>
   )
@@ -265,7 +265,7 @@ function Result({ a }: { a: Answer }) {
 
       <section>
         <h2 className="text-base font-semibold">What the test tables say</h2>
-        <article className={`mt-2 rounded-lg border p-4 sm:p-5 ${noData ? 'hatch border-dashed border-line-strong' : 'border-line bg-panel'}`}>
+        <article className={`mt-3 ${noData ? 'hatch border border-dashed border-line-strong p-4 sm:p-5' : ''}`}>
           <div className="flex flex-wrap items-center gap-3">
             <GradeBadge grade={a.grade} size="lg" />
             <span className="text-sm text-faint">{GRADE_MEANING[a.grade]}</span>
@@ -290,14 +290,14 @@ function Result({ a }: { a: Answer }) {
 
           {known && (
             <a
-              className="mt-4 inline-block text-sm text-flame hover:underline"
+              className="mt-4 inline-block text-sm link"
               href={href('evidence', {
                 m: r.material,
                 o2: String(Math.round(r.o2Fraction * 1000) / 10),
                 p: r.pressureAtm === undefined ? undefined : r.pressureAtm.toFixed(3),
               })}
             >
-              Explore this in the evidence lookup →
+              Explore this in the evidence lookup
             </a>
           )}
         </article>
@@ -327,7 +327,7 @@ function Result({ a }: { a: Answer }) {
                   <span className="font-mono text-xs text-faint">{c.accession}</span>{' '}
                   <span className="text-dim">{c.acronym || c.title}</span>{' '}
                   {c.doi && (
-                    <a className="font-mono text-xs text-flame hover:underline" href={`https://doi.org/${c.doi}`} target="_blank" rel="noreferrer">
+                    <a className="font-mono text-xs link" href={`https://doi.org/${c.doi}`} target="_blank" rel="noreferrer">
                       doi:{c.doi}
                     </a>
                   )}
@@ -347,7 +347,7 @@ function Read({ label, value, warn }: { label: string; value: string; warn?: str
       <dt className="text-xs text-faint">{label}</dt>
       <dd className="font-mono">
         {value}
-        {warn && <span className="ml-2 rounded-sm border border-bounded px-1 text-xs text-bounded">{warn}</span>}
+        {warn && <span className="ml-2 border border-bounded px-1 text-xs text-bounded">{warn}</span>}
       </dd>
     </div>
   )

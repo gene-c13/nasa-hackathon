@@ -46,7 +46,7 @@ export function O2Strip({ rows, query }: { rows: TestRow[]; query: number }) {
 
       <rect x={x(HABITAT.o2Min)} y={22} width={W - x(HABITAT.o2Min)} height={BASE - 22} fill="url(#habitat-hatch)" />
       <text x={W - 8} y={38} fontSize="15" textAnchor="end" fill="var(--color-flame)" fontFamily="var(--font-mono)">
-        MOON HABITAT ≥30%
+        Moon habitat, 30% and above
       </text>
 
       <line x1={0} x2={W} y1={BASE} y2={BASE} stroke="var(--color-line-strong)" />
@@ -75,7 +75,7 @@ export function O2Strip({ rows, query }: { rows: TestRow[]; query: number }) {
 
       <line x1={qx} x2={qx} y1={14} y2={BASE} stroke="var(--color-flame)" strokeWidth={2.5} />
       <text x={qx} y={11} fontSize="15" textAnchor={labelAnchor} fill="var(--color-flame)" fontFamily="var(--font-mono)" fontWeight="500">
-        YOU ASKED {pct(query, 0)}
+        You asked {pct(query, 0)}
       </text>
     </svg>
   )

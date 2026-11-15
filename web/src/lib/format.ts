@@ -2,12 +2,12 @@ import type { Family, Outcome } from '@shared/types'
 
 /** 0.222 -> "22.2%". Null stays visibly null; it is never shown as zero. */
 export const pct = (f: number | null, digits = 1) =>
-  f === null ? '—' : `${(f * 100).toFixed(digits)}%`
+  f === null ? '-' : `${(f * 100).toFixed(digits)}%`
 
 const PSI_PER_ATM = 14.696
 
 export const atm = (p: number | null) =>
-  p === null ? '—' : `${p.toFixed(2)} atm`
+  p === null ? '-' : `${p.toFixed(2)} atm`
 
 export const psi = (p: number) => `${(p * PSI_PER_ATM).toFixed(1)} psi`
 

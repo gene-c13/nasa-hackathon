@@ -63,6 +63,17 @@ body {
   );
 }
 
+/* Links are underlined ink. Orange is kept for the question being asked. */
+.link {
+  text-decoration: underline;
+  text-decoration-color: var(--color-line-strong);
+  text-underline-offset: 3px;
+}
+.link:hover {
+  color: var(--color-flame);
+  text-decoration-color: var(--color-flame);
+}
+
 :focus-visible {
   outline: 2px solid var(--color-flame);
   outline-offset: 2px;

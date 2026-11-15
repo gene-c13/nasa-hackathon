@@ -35,11 +35,11 @@ export default function App() {
   return (
     <ProvenanceProvider>
       <div className="flex min-h-screen flex-col">
-        <header className="sticky top-0 z-30 border-b border-line bg-canvas/90 backdrop-blur">
+        <header className="sticky top-0 z-30 border-b border-line bg-canvas">
           <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 pt-3 sm:flex-row sm:items-end sm:justify-between sm:px-6">
             <a href={href('evidence')} className="flex items-baseline gap-2 pb-1 sm:pb-3">
               <span className="text-lg font-semibold tracking-tight">
-                Flame<span className="text-flame">Safe</span>
+                FlameSafe
               </span>
               <span className="hidden text-xs text-faint md:inline">
                 NASA microgravity fire evidence, graded
@@ -69,9 +69,9 @@ export default function App() {
 
         <footer className="border-t border-line">
           <p className="mx-auto max-w-6xl px-4 py-4 text-xs text-faint sm:px-6">
-            {meta.investigationCount} investigations · {meta.testCount.toLocaleString()} tests ·{' '}
-            {meta.numericO2Count.toLocaleString()} with a recorded oxygen level · Source: {meta.source},{' '}
-            {meta.license} · Data built {meta.generatedAt.slice(0, 10)}
+            {meta.investigationCount} investigations and {meta.testCount.toLocaleString()} tests,{' '}
+            {meta.numericO2Count.toLocaleString()} of them with a recorded oxygen level. Source: {meta.source} ({meta.license}).
+            Data built {meta.generatedAt.slice(0, 10)}.
           </p>
         </footer>
       </div>

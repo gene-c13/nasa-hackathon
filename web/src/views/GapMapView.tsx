@@ -17,7 +17,7 @@ import { FAMILY_BLURB, FAMILY_LABEL, FAMILY_ORDER, pct, plural } from '../lib/fo
 import { href } from '../lib/route'
 
 const binLabel = (i: number) =>
-  `${Math.round(O2_BINS[i] * 100)}–${Math.round((O2_BINS[i + 1] ?? 1) * 100)}`
+  `${Math.round(O2_BINS[i] * 100)}-${Math.round((O2_BINS[i + 1] ?? 1) * 100)}`
 
 const COUNT = new Map(coverage.map((c) => [`${c.material}|${c.family}|${c.o2Bin}`, c.count]))
 const PEAK = Math.max(...coverage.map((c) => c.count))
@@ -84,7 +84,7 @@ export function GapMapView() {
         <FamilyGrid key={g.family} family={g.family} rows={g.rows} />
       ))}
 
-      <section className="rounded-lg border border-line bg-panel p-4 sm:p-5">
+      <section className="border-t border-line-strong pt-6">
         <h2 className="text-lg font-semibold">What this map cannot show</h2>
         <ul className="mt-3 space-y-2 text-dim">
           <li>
@@ -121,19 +121,19 @@ function FamilyGrid({
       <h2 className="text-lg font-semibold">{FAMILY_LABEL[family]}</h2>
       <p className="text-sm text-faint">{FAMILY_BLURB[family]}</p>
 
-      <div className="mt-3 overflow-x-auto rounded-lg border border-line bg-panel">
-        <div className="min-w-[46rem] p-3">
+      <div className="mt-4 overflow-x-auto">
+        <div className="min-w-[46rem]">
           <div className="grid items-end gap-1" style={{ gridTemplateColumns: cols }}>
             <div />
             <div style={{ gridColumn: `span ${firstHabitatCol}` }} />
-            <div className="border-b-2 border-flame px-1 pb-1 text-center font-mono text-[11px] uppercase tracking-wider text-flame"
+            <div className="border-b-2 border-flame px-1 pb-1 text-center text-xs text-flame"
               style={{ gridColumn: `span ${O2_BINS.length - firstHabitatCol}` }}>
-              Moon habitat · ≥30% O₂
+              Moon habitat: 30% oxygen and above
             </div>
           </div>
 
           <div className="mt-1 grid gap-px" style={{ gridTemplateColumns: cols }}>
-            <div className="self-end font-mono text-[11px] uppercase tracking-wider text-faint">Oxygen %</div>
+            <div className="self-end text-xs text-faint">Oxygen %</div>
             {O2_BINS.map((_, i) => (
               <div key={i} className={`text-center font-mono text-[11px] ${i >= firstHabitatCol ? 'text-flame' : 'text-faint'}`}>
                 {binLabel(i)}
@@ -153,7 +153,7 @@ function FamilyGrid({
 function Row({ name, family, total, withO2 }: { name: string; family: Family; total: number; withO2: number }) {
   return (
     <>
-      <div className="flex flex-col justify-center bg-panel pr-2">
+      <div className="flex flex-col justify-center pr-2">
         <a className="truncate text-sm hover:text-flame" href={href('tests', { mat: name, fam: family })}>{name}</a>
         <span className="text-[11px] text-faint">
           {withO2 === 0 ? `${total} tests, no O₂ recorded` : plural(total, 'test')}

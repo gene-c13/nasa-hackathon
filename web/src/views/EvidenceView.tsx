@@ -13,7 +13,7 @@
 import { useMemo } from 'react'
 import { canCompare, DEFAULT_TOLERANCE, gradeEvidence, HABITAT } from '@shared/evidence'
 import type { EvidenceResult, Family, TestRow } from '@shared/types'
-import { GRADE_COLOR, GRADE_MEANING, GradeBadge } from '../components/Grade'
+import { GRADE_MEANING, GradeBadge } from '../components/Grade'
 import { O2Strip } from '../components/O2Strip'
 import { RowList } from '../components/RowList'
 import { investigationByAccession, materialByName, materials, tests, type MaterialFamily } from '../data'
@@ -23,8 +23,8 @@ import { href, navigate } from '../lib/route'
 const KIND_LABEL = { solid: 'Solids', liquid: 'Liquids', gas: 'Gases' } as const
 
 const PRESETS = [
-  { label: 'Moon habitat', o2: 34, p: HABITAT.pressureMaxAtm.toFixed(3), note: '34% O₂ · 10.2 psi' },
-  { label: 'Space station', o2: 21, p: '1', note: '21% O₂ · 1 atm' },
+  { label: 'Moon habitat', o2: 34, p: HABITAT.pressureMaxAtm.toFixed(3), note: '34% O₂, 10.2 psi' },
+  { label: 'Space station', o2: 21, p: '1', note: '21% O₂, 1 atm' },
 ]
 
 export function EvidenceView({ params }: { params: URLSearchParams }) {
@@ -59,14 +59,14 @@ export function EvidenceView({ params }: { params: URLSearchParams }) {
         </p>
       </section>
 
-      <section className="rounded-lg border border-line bg-panel p-4 sm:p-5">
+      <section className="border-y border-line py-5">
         <div className="grid gap-5 md:grid-cols-[1fr_1.4fr_1fr]">
           <label className="block">
             <span className="text-sm text-dim">Material</span>
             <select
               value={material}
               onChange={(e) => set({ m: e.target.value })}
-              className="mt-1.5 w-full rounded border border-line-strong bg-raised px-3 py-2 text-base"
+              className="mt-1.5 w-full border border-line-strong bg-raised px-3 py-2 text-base"
             >
               {(['solid', 'liquid', 'gas'] as const).map((kind) => (
                 <optgroup key={kind} label={KIND_LABEL[kind]}>
@@ -108,7 +108,7 @@ export function EvidenceView({ params }: { params: URLSearchParams }) {
             <select
               value={pressure}
               onChange={(e) => set({ p: e.target.value })}
-              className="mt-1.5 w-full rounded border border-line-strong bg-raised px-3 py-2 text-base"
+              className="mt-1.5 w-full border border-line-strong bg-raised px-3 py-2 text-base"
             >
               <option value="">Any pressure</option>
               <option value="1">1 atm (14.7 psi)</option>
@@ -124,16 +124,16 @@ export function EvidenceView({ params }: { params: URLSearchParams }) {
             <button
               key={p.label}
               onClick={() => set({ o2: p.o2, p: p.p })}
-              className="rounded border border-line-strong px-3 py-1.5 text-sm hover:border-flame hover:text-flame"
+              className="border border-line-strong px-3 py-1.5 text-sm hover:border-flame hover:text-flame"
             >
-              {p.label} <span className="text-faint">· {p.note}</span>
+              {p.label} <span className="text-faint">({p.note})</span>
             </button>
           ))}
         </div>
       </section>
 
       {!mat ? (
-        <p className="hatch rounded-lg border border-dashed border-line-strong p-5 text-dim">
+        <p className="hatch border border-dashed border-line-strong p-5 text-dim">
           {material} does not appear in the PSI combustion data.
         </p>
       ) : (
@@ -190,7 +190,7 @@ function FamilyResult({
   // The material was tested, but no row carries a numeric oxygen level.
   if (!result) {
     return (
-      <article className="hatch rounded-lg border border-dashed border-line-strong p-5">
+      <article className="hatch border border-dashed border-line-strong p-5">
         <FamilyHeading family={mf.family} />
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <GradeBadge grade="no-data" size="lg" />
@@ -201,8 +201,8 @@ function FamilyResult({
           but none records a numeric oxygen level, so they cannot answer a question about a
           specific atmosphere.
         </p>
-        <a className="mt-3 inline-block text-sm text-flame hover:underline" href={href('tests', { mat: material, fam: mf.family })}>
-          See these {mf.rows.length} tests →
+        <a className="mt-3 inline-block text-sm link" href={href('tests', { mat: material, fam: mf.family })}>
+          See these {mf.rows.length} tests
         </a>
       </article>
     )
@@ -213,14 +213,13 @@ function FamilyResult({
 
   return (
     <article
-      className={`rounded-lg border p-4 sm:p-5 ${noData ? 'hatch border-dashed border-line-strong' : 'border-line bg-panel'}`}
-      style={noData ? undefined : { borderLeftColor: GRADE_COLOR[result.grade], borderLeftWidth: 3 }}
+      className={noData ? 'hatch border border-dashed border-line-strong p-4 sm:p-5' : 'border-t border-line-strong pt-6'}
     >
       <FamilyHeading family={mf.family} />
 
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <GradeBadge grade={result.grade} size="lg" />
-        <p className="text-lg">{headline(result, material, o2, mf)}</p>
+        <p className="text-xl font-medium">{headline(result, material, o2, mf)}</p>
       </div>
       <p className="mt-1 text-sm text-faint">{GRADE_MEANING[result.grade]}</p>
 
@@ -234,7 +233,7 @@ function FamilyResult({
 
       {result.grade === 'measured' && <OutcomeTally rows={result.matches} />}
 
-      <div className="mt-5 overflow-x-auto rounded border border-line bg-canvas/60 px-3 pb-1 pt-3">
+      <div className="mt-6 overflow-x-auto">
         <div className="min-w-[38rem]">
           <O2Strip rows={mf.withO2} query={o2} />
         </div>
@@ -257,8 +256,8 @@ function FamilyResult({
                 : `Tests at this condition (${shown.length})`}
           </h3>
           <RowList rows={shown.slice(0, 6)} />
-          <a className="mt-2 inline-block text-sm text-flame hover:underline" href={href('tests', { mat: material, fam: mf.family })}>
-            All {mf.rows.length} {material} tests in this family →
+          <a className="mt-2 inline-block text-sm link" href={href('tests', { mat: material, fam: mf.family })}>
+            All {mf.rows.length} {material} tests in this family
           </a>
         </div>
       )}
@@ -363,27 +362,23 @@ function NotPooled({ material, own, o2 }: { material: string; own: Family[]; o2:
         Other kinds of test do reach {pct(o2)} oxygen. They measure something physically different
         from a {material} test, so they are not mixed into the grade above.
       </p>
-      <div className="mt-3 grid gap-3 md:grid-cols-2">
+      <div className="mt-4 divide-y divide-line border-y border-line">
         {blocked.map((b) => (
-          <article key={b.family} className="rounded-lg border border-line bg-panel">
-            <header className="hatch flex items-center justify-between gap-3 border-b border-line px-4 py-2.5">
+          <article key={b.family} className="grid gap-x-8 gap-y-2 py-4 md:grid-cols-[13rem_1fr]">
+            <div>
               <h3 className="font-medium">{FAMILY_LABEL[b.family]}</h3>
-              <span className="rounded-sm border border-line-strong bg-canvas px-2 py-0.5 font-mono text-xs uppercase tracking-wider text-dim">
-                ⊘ Not pooled
+              <span className="hatch mt-2 inline-block border border-dashed border-line-strong px-2 py-0.5 font-mono text-xs uppercase tracking-wider text-dim">
+                Not pooled
               </span>
-            </header>
-            <div className="space-y-2 px-4 py-3">
-              <p className="text-sm">
+            </div>
+            <div className="space-y-2 text-sm">
+              <p>
                 <span className="font-mono">{plural(b.near, 'test')}</span> at {pct(o2)} oxygen;{' '}
-                {b.total.toLocaleString()} in all, from {pct(b.lo)} to {pct(b.hi)}.
+                {b.total.toLocaleString()} in all, from {pct(b.lo)} to {pct(b.hi)}. From {names(b.accessions)}.
               </p>
-              <p className="text-sm text-faint">From {names(b.accessions)}.</p>
-              <p className="border-l-2 border-line-strong pl-3 text-sm leading-relaxed text-dim">
-                <span className="font-medium text-ink">Why this is blocked: </span>
-                {b.reason}
-              </p>
-              <a className="inline-block text-sm text-flame hover:underline" href={href('tests', { fam: b.family })}>
-                Browse these tests separately →
+              <p className="max-w-3xl leading-relaxed text-dim">{b.reason}</p>
+              <a className="link inline-block" href={href('tests', { fam: b.family })}>
+                Browse these tests separately
               </a>
             </div>
           </article>

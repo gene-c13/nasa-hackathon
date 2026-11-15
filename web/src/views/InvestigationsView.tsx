@@ -58,13 +58,13 @@ export function InvestigationsView({ params }: { params: URLSearchParams }) {
           value={q}
           onChange={(e) => set({ q: e.target.value })}
           placeholder="Search: FLEX, methanol, smoke…"
-          className="w-full rounded border border-line-strong bg-raised px-3 py-2 sm:max-w-xs"
+          className="w-full border border-line-strong bg-raised px-3 py-2 sm:max-w-xs"
         />
         <div className="flex flex-wrap gap-2">
           <Chip active={!tag} onClick={() => set({ tag: '' })}>All</Chip>
           {TAGS.map((t) => (
             <Chip key={t.tag} active={tag === t.tag} onClick={() => set({ tag: tag === t.tag ? '' : t.tag })}>
-              {t.label} <span className="text-faint">· {t.blurb}</span>
+              {t.label}: <span className="text-faint">{t.blurb}</span>
             </Chip>
           ))}
         </div>
@@ -75,16 +75,16 @@ export function InvestigationsView({ params }: { params: URLSearchParams }) {
       </p>
 
       {shown.length === 0 ? (
-        <p className="hatch rounded-lg border border-dashed border-line-strong p-5 text-dim">
+        <p className="hatch border border-dashed border-line-strong p-5 text-dim">
           No investigation matches "{q}"{tag ? ` under ${tag}` : ''}.{' '}
-          <button className="text-flame hover:underline" onClick={() => navigate('investigations', {}, true)}>
+          <button className="link" onClick={() => navigate('investigations', {}, true)}>
             Clear the search
           </button>
         </p>
       ) : (
-        <div className="grid gap-3 lg:grid-cols-2">
+        <div className="divide-y divide-line border-y border-line">
           {shown.map((inv) => (
-            <Card key={inv.accession} inv={inv} />
+            <Entry key={inv.accession} inv={inv} />
           ))}
         </div>
       )}
@@ -97,82 +97,72 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
     <button
       onClick={onClick}
       aria-pressed={active}
-      className={`rounded border px-3 py-1.5 text-sm ${active ? 'border-flame text-flame' : 'border-line-strong text-dim hover:text-ink'}`}
+      className={`border px-3 py-1.5 text-sm ${active ? 'border-flame text-flame' : 'border-line-strong text-dim hover:text-ink'}`}
     >
       {children}
     </button>
   )
 }
 
-function Card({ inv }: { inv: Investigation }) {
+function Entry({ inv }: { inv: Investigation }) {
   const [open, setOpen] = useState(false)
   const hasTests = inv.testCount > 0
 
   return (
-    <article className="flex flex-col rounded-lg border border-line bg-panel p-4">
-      <div className="flex items-baseline justify-between gap-3">
-        <h2 className="text-lg font-medium">{inv.acronym || inv.title}</h2>
-        <span className="shrink-0 font-mono text-xs text-faint">{inv.accession}</span>
+    <article className="grid gap-x-12 gap-y-4 py-6 lg:grid-cols-[1fr_17rem]">
+      <div className="min-w-0">
+        <div className="flex flex-wrap items-baseline gap-x-3">
+          <h2 className="text-lg font-medium">{inv.acronym || inv.title}</h2>
+          <span className="font-mono text-xs text-faint">{inv.accession}</span>
+        </div>
+        {inv.acronym && inv.acronym !== inv.title && <p className="text-sm text-faint">{inv.title}</p>}
+        <p className="mt-2 max-w-[65ch] leading-relaxed text-dim">
+          {inv.summary || 'No summary was generated for this investigation.'}
+        </p>
+        <p className="mt-2 text-sm text-faint">
+          {FAMILY_LABEL[inv.family]} tests{inv.tags.length > 0 && `, relevant to ${inv.tags.join(' and ')}`}.
+        </p>
       </div>
-      {inv.acronym && inv.acronym !== inv.title && <p className="text-sm text-faint">{inv.title}</p>}
 
-      <p className="mt-3 text-sm leading-relaxed text-dim">
-        {inv.summary || 'No summary was generated for this investigation.'}
-      </p>
-
-      <dl className="mt-4 grid grid-cols-3 gap-2 border-t border-line pt-3 text-sm">
-        <div>
-          <dt className="text-xs text-faint">Tests</dt>
+      <div className="text-sm">
+        <dl className="grid grid-cols-[7.5rem_1fr] gap-y-1">
+          <dt className="text-faint">Tests</dt>
           <dd className={`font-mono ${hasTests ? '' : 'text-faint'}`}>{hasTests ? inv.testCount : 'none'}</dd>
-        </div>
-        <div>
-          <dt className="text-xs text-faint">Oxygen range</dt>
+          <dt className="text-faint">Oxygen range</dt>
           <dd className={`font-mono ${inv.o2Range ? '' : 'text-faint'}`}>
-            {inv.o2Range ? `${pct(inv.o2Range[0], 0)}–${pct(inv.o2Range[1], 0)}` : 'not numeric'}
+            {inv.o2Range ? `${pct(inv.o2Range[0], 0)} to ${pct(inv.o2Range[1], 0)}` : 'not numeric'}
           </dd>
-        </div>
-        <div>
-          <dt className="text-xs text-faint">Burn outcome</dt>
+          <dt className="text-faint">Burn outcome</dt>
           <dd className={`font-mono ${inv.hasOutcomeData ? '' : 'text-faint'}`}>
             {inv.hasOutcomeData ? 'recorded' : 'not recorded'}
           </dd>
+        </dl>
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
+          {hasTests ? (
+            <a className="link" href={href('tests', { acc: inv.accession })}>
+              Browse {plural(inv.testCount, 'test')}
+            </a>
+          ) : (
+            <span className="text-faint">Description only: PSI has no test table for this one.</span>
+          )}
+          <button className="link" onClick={() => setOpen(!open)} aria-expanded={open}>
+            {open ? 'Hide details' : 'Details'}
+          </button>
         </div>
-      </dl>
-
-      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-faint">
-        <span>{FAMILY_LABEL[inv.family]}</span>
-        {inv.tags.map((t) => (
-          <span key={t} className="rounded-sm border border-line-strong px-1.5 py-0.5 font-mono uppercase tracking-wider text-dim">
-            {t}
-          </span>
-        ))}
-      </div>
-
-      <div className="mt-4 flex flex-wrap items-center gap-4 text-sm">
-        {hasTests ? (
-          <a className="text-flame hover:underline" href={href('tests', { acc: inv.accession })}>
-            Browse {plural(inv.testCount, 'test')} →
-          </a>
-        ) : (
-          <span className="text-faint">Metadata only: PSI has no test table for this one.</span>
-        )}
-        <button className="text-dim hover:text-ink" onClick={() => setOpen(!open)} aria-expanded={open}>
-          {open ? 'Hide details' : 'Details'}
-        </button>
       </div>
 
       {open && (
-        <div className="mt-4 space-y-3 border-t border-line pt-4 text-sm">
+        <div className="space-y-3 text-sm lg:col-span-2">
           <Detail label="Platform" value={inv.platform} />
           <Detail label="Hardware" value={inv.hardware} />
           <div>
             <p className="text-xs text-faint">Objective, in NASA's words</p>
-            <p className="mt-1 whitespace-pre-line leading-relaxed text-dim">{inv.objective || '—'}</p>
+            <p className="mt-1 max-w-[75ch] whitespace-pre-line leading-relaxed text-dim">{inv.objective || 'Not given.'}</p>
           </div>
           {inv.doi && (
             <div>
               <p className="text-xs text-faint">Dataset DOI</p>
-              <a className="break-all font-mono text-flame hover:underline" href={`https://doi.org/${inv.doi}`} target="_blank" rel="noreferrer">
+              <a className="break-all font-mono link" href={`https://doi.org/${inv.doi}`} target="_blank" rel="noreferrer">
                 {inv.doi}
               </a>
             </div>
@@ -205,7 +195,7 @@ function Detail({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <p className="text-xs text-faint">{label}</p>
-      <p className="text-dim">{value || '—'}</p>
+      <p className="text-dim">{value || 'Not given.'}</p>
     </div>
   )
 }

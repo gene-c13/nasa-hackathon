@@ -59,39 +59,37 @@ function Panel({ row, onClose }: { row: TestRow; onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-40 flex justify-end" role="dialog" aria-modal="true" aria-label={`Provenance for ${row.id}`}>
       <button className="absolute inset-0 bg-black/60" onClick={onClose} aria-label="Close provenance" />
-      <aside className="relative flex h-full w-full max-w-lg flex-col border-l border-line bg-panel shadow-2xl">
+      <aside className="relative flex h-full w-full max-w-lg flex-col border-l border-line bg-panel">
         <header className="flex items-start justify-between gap-4 border-b border-line px-5 py-4">
           <div className="min-w-0">
-            <p className="font-mono text-xs uppercase tracking-wider text-faint">Provenance</p>
-            <h2 className="mt-1 font-mono text-lg">{row.id}</h2>
+            <h2 className="font-mono text-lg">{row.id}</h2>
             <p className="mt-1 text-sm text-dim">
-              {inv?.acronym || row.accession} · {FAMILY_LABEL[row.family]}
+              {inv?.acronym || row.accession}, {FAMILY_LABEL[row.family].toLowerCase()} test
             </p>
           </div>
-          <button onClick={onClose} className="rounded border border-line px-2.5 py-1 text-sm text-dim hover:border-line-strong hover:text-ink">
+          <button onClick={onClose} className="border border-line px-2.5 py-1 text-sm text-dim hover:border-line-strong hover:text-ink">
             Close
           </button>
         </header>
 
         <div className="flex-1 space-y-6 overflow-y-auto px-5 py-5">
           <section>
-            <h3 className="font-mono text-xs uppercase tracking-wider text-faint">Oxygen, as recorded and as used</h3>
+            <h3 className="text-sm font-medium">Oxygen, as recorded and as used</h3>
             {row.sourceO2Column && rawO2 !== undefined ? (
-              <div className="mt-2 grid grid-cols-[1fr_auto_1fr] items-stretch gap-2">
-                <div className="rounded border border-line bg-raised p-3">
-                  <p className="text-xs text-faint">NASA's CSV</p>
-                  <p className="mt-1 font-mono text-xl">{rawO2}</p>
-                  <p className="mt-1 break-words font-mono text-xs text-dim">"{row.sourceO2Column.trim()}"</p>
+              <dl className="mt-2 grid grid-cols-2 gap-x-6 border-y border-line py-3">
+                <div className="min-w-0">
+                  <dt className="text-xs text-faint">As written in NASA's file</dt>
+                  <dd className="mt-1 font-mono text-xl">{rawO2}</dd>
+                  <dd className="mt-1 break-words font-mono text-xs text-dim">"{row.sourceO2Column.trim()}"</dd>
                 </div>
-                <div className="flex items-center text-faint" aria-hidden>→</div>
-                <div className="rounded border border-line bg-raised p-3">
-                  <p className="text-xs text-faint">This app</p>
-                  <p className="mt-1 font-mono text-xl">{row.o2Fraction === null ? '—' : row.o2Fraction.toFixed(3)}</p>
-                  <p className="mt-1 text-xs text-dim">mole fraction ({pct(row.o2Fraction)})</p>
+                <div className="min-w-0">
+                  <dt className="text-xs text-faint">As used in this app</dt>
+                  <dd className="mt-1 font-mono text-xl">{row.o2Fraction === null ? '-' : row.o2Fraction.toFixed(3)}</dd>
+                  <dd className="mt-1 text-xs text-dim">mole fraction ({pct(row.o2Fraction)})</dd>
                 </div>
-              </div>
+              </dl>
             ) : (
-              <p className="hatch mt-2 rounded border border-dashed border-line-strong p-3 text-sm text-dim">
+              <p className="hatch mt-2 border border-dashed border-line-strong p-3 text-sm text-dim">
                 This test's source file has no numeric oxygen column, so the app records no oxygen level for it.
               </p>
             )}
@@ -101,43 +99,43 @@ function Panel({ row, onClose }: { row: TestRow; onClose: () => void }) {
           </section>
 
           <section>
-            <h3 className="font-mono text-xs uppercase tracking-wider text-faint">Normalised values</h3>
+            <h3 className="text-sm font-medium">Normalised values</h3>
             <dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
               <Field label="Material" value={row.material ?? 'Unresolved'} />
-              <Field label="Fuel, as written" value={row.fuel || '—'} />
+              <Field label="Fuel, as written" value={row.fuel || '-'} />
               <Field label="Pressure" value={atm(row.pressureAtm)} />
               <Field label="Outcome" value={OUTCOME_LABEL[row.outcome]} />
-              <Field label="Diluent" value={row.diluent ?? '—'} />
-              <Field label="Flow" value={row.flowCmS === null ? '—' : `${row.flowCmS} cm/s`} />
+              <Field label="Diluent" value={row.diluent ?? '-'} />
+              <Field label="Flow" value={row.flowCmS === null ? '-' : `${row.flowCmS} cm/s`} />
             </dl>
           </section>
 
           <section>
-            <h3 className="font-mono text-xs uppercase tracking-wider text-faint">Source</h3>
+            <h3 className="text-sm font-medium">Source</h3>
             <dl className="mt-2 space-y-2 text-sm">
-              <Field label="Investigation" value={inv ? `${row.accession} · ${inv.title}` : row.accession} />
+              <Field label="Investigation" value={inv ? `${row.accession}, ${inv.title}` : row.accession} />
               <Field label="File" value={row.sourceFile} mono />
               {inv?.doi && (
                 <div>
                   <dt className="text-xs text-faint">DOI</dt>
                   <dd>
-                    <a className="break-all font-mono text-sm text-flame underline-offset-2 hover:underline" href={`https://doi.org/${inv.doi}`} target="_blank" rel="noreferrer">
+                    <a className="break-all font-mono text-sm link" href={`https://doi.org/${inv.doi}`} target="_blank" rel="noreferrer">
                       {inv.doi}
                     </a>
                   </dd>
                 </div>
               )}
             </dl>
-            <div className="mt-3 rounded border border-line bg-raised p-3">
+            <div className="mt-3 border-l-2 border-line-strong pl-3">
               <p className="text-sm leading-relaxed text-dim">{cite}</p>
-              <button onClick={copy} className="mt-2 rounded bg-ink px-3 py-1.5 text-sm font-medium text-canvas hover:bg-white">
+              <button onClick={copy} className="mt-2 border border-line-strong px-3 py-1.5 text-sm hover:border-ink">
                 {copied ? 'Copied' : 'Copy citation'}
               </button>
             </div>
           </section>
 
           <section>
-            <h3 className="font-mono text-xs uppercase tracking-wider text-faint">
+            <h3 className="text-sm font-medium">
               Original row, verbatim ({Object.keys(row.raw).length} columns)
             </h3>
             <table className="mt-2 w-full text-left text-xs">
@@ -145,7 +143,7 @@ function Panel({ row, onClose }: { row: TestRow; onClose: () => void }) {
                 {Object.entries(row.raw).map(([k, v]) => (
                   <tr key={k} className={`border-t border-line align-top ${k === row.sourceO2Column ? 'bg-flame/10' : ''}`}>
                     <th className="w-1/2 py-1.5 pr-3 font-normal text-dim">{k.trim()}</th>
-                    <td className="break-words py-1.5 font-mono">{v || '—'}</td>
+                    <td className="break-words py-1.5 font-mono">{v || '-'}</td>
                   </tr>
                 ))}
               </tbody>
