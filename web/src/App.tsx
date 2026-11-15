@@ -8,16 +8,20 @@ import { useEffect } from 'react'
 import { ProvenanceProvider } from './components/Provenance'
 import { meta } from './data'
 import { href, useRoute, type View } from './lib/route'
+import { AskView } from './views/AskView'
 import { EvidenceView } from './views/EvidenceView'
 import { GapMapView } from './views/GapMapView'
+import { HowView } from './views/HowView'
 import { InvestigationsView } from './views/InvestigationsView'
 import { TestsView } from './views/TestsView'
 
 const NAV: { view: View; label: string }[] = [
   { view: 'evidence', label: 'Evidence lookup' },
+  { view: 'ask', label: 'Ask' },
   { view: 'gaps', label: 'Gap map' },
   { view: 'investigations', label: 'Investigations' },
   { view: 'tests', label: 'Test data' },
+  { view: 'how', label: 'How it works' },
 ]
 
 export default function App() {
@@ -56,7 +60,9 @@ export default function App() {
 
         <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6">
           {view === 'evidence' && <EvidenceView params={params} />}
+          {view === 'ask' && <AskView key={params.get('q') ?? ''} params={params} />}
           {view === 'gaps' && <GapMapView />}
+          {view === 'how' && <HowView />}
           {view === 'investigations' && <InvestigationsView params={params} />}
           {view === 'tests' && <TestsView params={params} />}
         </main>

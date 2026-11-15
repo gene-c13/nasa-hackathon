@@ -7,8 +7,8 @@
  */
 import { useSyncExternalStore } from 'react'
 
-export type View = 'evidence' | 'investigations' | 'tests' | 'gaps'
-export const VIEWS: View[] = ['evidence', 'investigations', 'tests', 'gaps']
+export type View = 'evidence' | 'ask' | 'investigations' | 'tests' | 'gaps' | 'how'
+export const VIEWS: View[] = ['evidence', 'ask', 'investigations', 'tests', 'gaps', 'how']
 
 export type Params = Record<string, string | undefined>
 

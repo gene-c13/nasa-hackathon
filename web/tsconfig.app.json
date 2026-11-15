@@ -16,7 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "resolveJsonModule": true,
-    "paths": { "@shared/*": ["../shared/*"] },
+    "paths": { "@shared/*": ["../shared/*"], "@api/*": ["../api/*"] },
 
     /* Linting */
     "noUnusedLocals": true,
