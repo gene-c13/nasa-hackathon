@@ -50,51 +50,32 @@ export function GapMapView() {
     <div className="space-y-8">
       <section>
         <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Where the data stops</h1>
+        <p className="mt-3 max-w-2xl text-lg leading-relaxed">
+          {solidsInBand === 0
+            ? 'No solid material has been tested at habitat oxygen levels'
+            : `${plural(solidsInBand, 'solid-material test')} exist at habitat oxygen levels`}{' '}
+          ({pct(HABITAT.o2Min, 0)} or more). The highest any solid has been tested at is{' '}
+          {pct(solidMax)}. The {anyInBand.toLocaleString()} tests above that line are all{' '}
+          {bandFamilies} tests.
+        </p>
         <p className="mt-2 max-w-2xl text-dim">
           Each row is a material, each column an oxygen band. Hatched cells are conditions nobody
           has tested in microgravity. The orange columns are the planned Moon habitat atmosphere.
         </p>
       </section>
 
-      {/*
-        One number is the finding; the other two are its context. They were
-        three equal tiles, which gave the zero the same weight as the figures
-        that explain it. Now the zero leads at full size and the context sits
-        beside it, smaller, with its units.
-      */}
-      <section className="flex flex-col gap-4 sm:flex-row sm:items-stretch">
-        <div className="hatch flex-1 rounded-lg border border-dashed border-line-strong p-5">
-          <p className="text-6xl font-semibold leading-none sm:text-7xl">{solidsInBand}</p>
-          <p className="mt-3 max-w-sm text-dim">
-            solid-material tests at habitat oxygen levels ({pct(HABITAT.o2Min, 0)} or more)
-          </p>
-        </div>
-        <dl className="flex flex-col justify-center gap-5 rounded-lg border border-line bg-panel p-5 sm:w-80">
-          <div>
-            <dd className="text-2xl font-semibold">{pct(solidMax)}</dd>
-            <dt className="text-sm text-dim">highest oxygen level any solid material was tested at</dt>
-          </div>
-          <div>
-            <dd className="text-2xl font-semibold">{anyInBand.toLocaleString()}</dd>
-            <dt className="text-sm text-dim">
-              tests of any kind at {pct(HABITAT.o2Min, 0)} oxygen or more, all of them {bandFamilies} tests
-            </dt>
-          </div>
-        </dl>
-      </section>
-
       <p className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-faint" aria-label="Legend">
-        <span className="inline-flex items-center gap-2">
-          <span className="inline-block h-4 w-4 rounded-sm" style={{ background: 'rgb(79 209 165 / 0.4)' }} />
-          <span className="inline-block h-4 w-4 rounded-sm" style={{ background: 'rgb(79 209 165 / 1)' }} />
-          fewer to more tests
+        <span className="inline-flex items-center gap-px">
+          <span className="inline-block h-4 w-4" style={{ background: 'rgb(79 209 165 / 0.4)' }} />
+          <span className="inline-block h-4 w-4" style={{ background: 'rgb(79 209 165 / 1)' }} />
+          <span className="ml-2">fewer to more tests</span>
         </span>
         <span className="inline-flex items-center gap-2">
-          <span className="hatch inline-block h-4 w-4 rounded-sm border border-dashed border-line" />
+          <span className="hatch inline-block h-4 w-4 bg-raised" />
           no test
         </span>
         <span className="inline-flex items-center gap-2">
-          <span className="hatch-flame inline-block h-4 w-4 rounded-sm border border-dashed border-flame/30" />
+          <span className="hatch-flame inline-block h-4 w-4 bg-raised" />
           no test, inside the habitat band
         </span>
       </p>
@@ -145,13 +126,13 @@ function FamilyGrid({
           <div className="grid items-end gap-1" style={{ gridTemplateColumns: cols }}>
             <div />
             <div style={{ gridColumn: `span ${firstHabitatCol}` }} />
-            <div className="rounded-t-sm border-b-2 border-flame px-1 pb-1 text-center font-mono text-[11px] uppercase tracking-wider text-flame"
+            <div className="border-b-2 border-flame px-1 pb-1 text-center font-mono text-[11px] uppercase tracking-wider text-flame"
               style={{ gridColumn: `span ${O2_BINS.length - firstHabitatCol}` }}>
               Moon habitat · ≥30% O₂
             </div>
           </div>
 
-          <div className="mt-1 grid gap-1" style={{ gridTemplateColumns: cols }}>
+          <div className="mt-1 grid gap-px" style={{ gridTemplateColumns: cols }}>
             <div className="self-end font-mono text-[11px] uppercase tracking-wider text-faint">Oxygen %</div>
             {O2_BINS.map((_, i) => (
               <div key={i} className={`text-center font-mono text-[11px] ${i >= firstHabitatCol ? 'text-flame' : 'text-faint'}`}>
@@ -172,7 +153,7 @@ function FamilyGrid({
 function Row({ name, family, total, withO2 }: { name: string; family: Family; total: number; withO2: number }) {
   return (
     <>
-      <div className="flex flex-col justify-center pr-2">
+      <div className="flex flex-col justify-center bg-panel pr-2">
         <a className="truncate text-sm hover:text-flame" href={href('tests', { mat: name, fam: family })}>{name}</a>
         <span className="text-[11px] text-faint">
           {withO2 === 0 ? `${total} tests, no O₂ recorded` : plural(total, 'test')}
@@ -185,7 +166,7 @@ function Row({ name, family, total, withO2 }: { name: string; family: Family; to
         if (!n) {
           return (
             <div key={bin} title={title} aria-label={title}
-              className={`h-10 rounded-sm border border-dashed ${inBand ? 'hatch-flame border-flame/30' : 'hatch border-line'}`} />
+              className={`h-10 bg-raised ${inBand ? 'hatch-flame' : 'hatch'}`} />
           )
         }
         // Floor of 0.4: at 0.25 a one-test cell measured 1.70:1 against the
@@ -198,7 +179,7 @@ function Row({ name, family, total, withO2 }: { name: string; family: Family; to
               o2min: String(Math.round(bin * 100)),
               o2max: String(Math.round((O2_BINS[i + 1] ?? 1) * 100)),
             })}
-            className={`flex h-10 items-center justify-center rounded-sm font-mono text-sm font-medium hover:ring-2 hover:ring-ink ${inBand ? 'ring-1 ring-flame/60' : ''}`}
+            className="flex h-10 items-center justify-center font-mono text-sm hover:outline hover:outline-2 hover:outline-ink"
             style={{ background: `rgb(79 209 165 / ${strength})`, color: strength > 0.55 ? '#06231a' : 'var(--color-ink)' }}>
             {n}
           </a>
