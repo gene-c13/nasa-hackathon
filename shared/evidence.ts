@@ -42,7 +42,7 @@ export interface EvidenceQuery {
  * physical quantity under a different mechanism. Plotting them on one axis
  * produces a chart that looks informative and means nothing.
  */
-const INCOMPARABLE: Record<string, string> = {
+export const INCOMPARABLE: Record<string, string> = {
   'droplet|flame-spread':
     'A droplet extinction diameter and a flame-spread rate measure different quantities. Droplets burn in still gas; solid samples depend strongly on forced flow.',
   'droplet|burner':
@@ -62,6 +62,16 @@ export interface Comparability {
   reason: string
 }
 
+/**
+ * Used when no entry in the table covers a pair. Exported so a self-test can
+ * assert that no real pair ever falls back to it: the table and the lookup
+ * once disagreed about key order, and five of six pairs silently landed here
+ * while still blocking correctly. The guard worked and the explanation did
+ * not, which is the half that matters.
+ */
+export const GENERIC_INCOMPARABLE_REASON =
+  'Different test families measure different quantities.'
+
 /** Can results from these two families be placed on the same axis? */
 export function canCompare(a: Family, b: Family): Comparability {
   if (a === b) return { ok: true, reason: 'Same test family.' }
@@ -69,7 +79,7 @@ export function canCompare(a: Family, b: Family): Comparability {
   const reason = INCOMPARABLE[`${a}|${b}`] ?? INCOMPARABLE[`${b}|${a}`]
   return {
     ok: false,
-    reason: reason ?? 'Different test families measure different quantities.',
+    reason: reason ?? GENERIC_INCOMPARABLE_REASON,
   }
 }
 

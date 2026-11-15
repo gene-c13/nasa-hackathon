@@ -14,16 +14,19 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import type { Dataset, TestRow } from '../shared/types.ts'
+import type { Dataset, Family, TestRow } from '../shared/types.ts'
 import {
   gradeEvidence,
   canCompare,
   blockReason,
   coverage,
   inHabitatBand,
+  GENERIC_INCOMPARABLE_REASON,
   HABITAT,
+  INCOMPARABLE,
   pct,
 } from '../shared/evidence.ts'
+import { FAMILIES } from '../shared/gaps.ts'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const DATA_FILE = resolve(here, '../shared/data.json')
@@ -114,10 +117,63 @@ const CHECKS: Check[] = [
     },
   },
   {
-    name: 'Droplet and flame-spread results cannot be compared',
+    /**
+     * This replaces a check that tested droplet|flame-spread alone — which was
+     * the single pair whose table key happened to match the sorted lookup key.
+     * It passed on every run while the other five pairs returned the generic
+     * fallback instead of their own physics. A test that only exercises the
+     * working case buys confidence it has not earned, so this one walks the
+     * whole matrix.
+     */
+    name: 'Every family pair is blocked and gives its own physical reason',
     run: () => {
-      const v = canCompare('droplet', 'flame-spread')
-      return { pass: !v.ok, detail: v.reason.slice(0, 70) + '...' }
+      const failures: string[] = []
+      for (let i = 0; i < FAMILIES.length; i++) {
+        for (let j = i + 1; j < FAMILIES.length; j++) {
+          const [a, b] = [FAMILIES[i], FAMILIES[j]]
+          // Both argument orders: the caller does not sort, so neither may we.
+          for (const [x, y] of [[a, b], [b, a]] as const) {
+            const v = canCompare(x, y)
+            if (v.ok) failures.push(`${x}|${y} was not blocked`)
+            else if (v.reason === GENERIC_INCOMPARABLE_REASON) {
+              failures.push(`${x}|${y} fell back to the generic reason`)
+            }
+          }
+        }
+      }
+      const pairs = (FAMILIES.length * (FAMILIES.length - 1)) / 2
+      return {
+        pass: failures.length === 0,
+        detail: failures.length
+          ? failures.join('; ')
+          : `all ${pairs} pairs blocked with their own reason, in both argument orders`,
+      }
+    },
+  },
+  {
+    name: 'Every entry in the incomparability table is reachable',
+    run: () => {
+      const unreachable: string[] = []
+      for (const [key, reason] of Object.entries(INCOMPARABLE)) {
+        const [a, b] = key.split('|') as [Family, Family]
+        if (canCompare(a, b).reason !== reason) unreachable.push(key)
+      }
+      return {
+        pass: unreachable.length === 0,
+        detail: unreachable.length
+          ? `unreachable: ${unreachable.join(', ')}`
+          : `all ${Object.keys(INCOMPARABLE).length} entries resolve to their own text`,
+      }
+    },
+  },
+  {
+    name: 'A family is always comparable with itself',
+    run: () => {
+      const bad = FAMILIES.filter((f) => !canCompare(f, f).ok)
+      return {
+        pass: bad.length === 0,
+        detail: bad.length ? `not self-comparable: ${bad.join(', ')}` : FAMILIES.join(', '),
+      }
     },
   },
   {
