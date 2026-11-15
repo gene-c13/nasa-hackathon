@@ -9,6 +9,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@shared': path.resolve(import.meta.dirname, '../shared'),
+      // Only api/canned.ts is imported by the browser: the pinned demo questions.
+      '@api': path.resolve(import.meta.dirname, '../api'),
     },
   },
 })
