@@ -1,5 +1,6 @@
 node_modules/
 dist/
+.vercel/
 # Raw PSI downloads are large and refetchable, so they stay out of the repo.
 # The enrichment cache does not: committing it is what lets anyone reproduce
 # shared/data.json byte for byte without an API key. Git cannot re-include a
