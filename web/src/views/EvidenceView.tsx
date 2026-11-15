@@ -54,8 +54,8 @@ export function EvidenceView({ params }: { params: URLSearchParams }) {
           What did NASA actually measure?
         </h1>
         <p className="mt-2 max-w-2xl text-dim">
-          Pick a material and an atmosphere. You get a grade for the evidence first, then the tests
-          behind it. If nobody has tested it, this says so.
+          Choose a material and an oxygen level. Most combinations have never been tested in
+          microgravity.
         </p>
       </section>
 

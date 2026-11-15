@@ -148,8 +148,8 @@ export function AskView({ params }: { params: URLSearchParams }) {
       <section>
         <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Ask in plain English</h1>
         <p className="mt-2 max-w-2xl text-dim">
-          A language model reads your question and words the reply. It does not decide the answer:
-          the grade and every number come from NASA's test tables.
+          A language model reads your question and writes the reply. The numbers come from the test
+          tables; a reply that invents one is discarded.
         </p>
       </section>
 

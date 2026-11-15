@@ -41,9 +41,6 @@ export default function App() {
               <span className="text-lg font-semibold tracking-tight">
                 FlameSafe
               </span>
-              <span className="hidden text-xs text-faint md:inline">
-                NASA microgravity fire evidence, graded
-              </span>
             </a>
             <nav className="-mx-4 flex overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:px-0" aria-label="Sections">
               {NAV.map((n) => (
