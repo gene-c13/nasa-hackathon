@@ -1,72 +1,74 @@
-import { investigations, tests, meta } from './data'
+/**
+ * App shell: header, navigation, and one view at a time.
+ *
+ * The view and its filters come from the URL hash (see lib/route.ts). The
+ * provenance panel is provided once here, so any row in any view can open it.
+ */
+import { useEffect } from 'react'
+import { ProvenanceProvider } from './components/Provenance'
+import { meta } from './data'
+import { href, useRoute, type View } from './lib/route'
+import { EvidenceView } from './views/EvidenceView'
+import { GapMapView } from './views/GapMapView'
+import { InvestigationsView } from './views/InvestigationsView'
+import { TestsView } from './views/TestsView'
 
-const TAG_STYLE: Record<string, string> = {
-  prevention: 'bg-amber-500/15 text-amber-300 ring-amber-500/30',
-  detection: 'bg-sky-500/15 text-sky-300 ring-sky-500/30',
-  suppression: 'bg-emerald-500/15 text-emerald-300 ring-emerald-500/30',
-}
+const NAV: { view: View; label: string }[] = [
+  { view: 'evidence', label: 'Evidence lookup' },
+  { view: 'gaps', label: 'Gap map' },
+  { view: 'investigations', label: 'Investigations' },
+  { view: 'tests', label: 'Test data' },
+]
 
 export default function App() {
+  const { view, params } = useRoute()
+
+  // A new section starts at its top, not wherever the last one was scrolled to.
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [view])
+
   return (
-    <div className="min-h-full bg-zinc-950 text-zinc-100">
-      <header className="border-b border-zinc-800 px-6 py-5">
-        <h1 className="text-lg font-semibold tracking-tight">FlameSafe</h1>
-        <p className="text-sm text-zinc-400">
-          Fire-safety evidence from NASA microgravity combustion data
-        </p>
-        <p className="mt-2 text-xs text-zinc-500">
-          {meta.investigationCount} investigations · {meta.testCount} test rows ·{' '}
-          {meta.numericO2Count} with oxygen data · {meta.source} · {meta.license}
-        </p>
-      </header>
-
-      <main className="mx-auto max-w-3xl space-y-3 p-6">
-        {investigations.map((inv) => (
-          <article
-            key={inv.accession}
-            className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-4"
-          >
-            <div className="flex items-baseline justify-between gap-4">
-              <h2 className="font-medium">{inv.acronym || inv.title}</h2>
-              <span className="shrink-0 font-mono text-xs text-zinc-500">
-                {inv.accession}
+    <ProvenanceProvider>
+      <div className="flex min-h-screen flex-col">
+        <header className="sticky top-0 z-30 border-b border-line bg-canvas/90 backdrop-blur">
+          <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 pt-3 sm:flex-row sm:items-end sm:justify-between sm:px-6">
+            <a href={href('evidence')} className="flex items-baseline gap-2 pb-1 sm:pb-3">
+              <span className="text-lg font-semibold tracking-tight">
+                Flame<span className="text-flame">Safe</span>
               </span>
-            </div>
-
-            <p className="mt-2 text-sm leading-relaxed text-zinc-300">
-              {inv.summary || (
-                <span className="text-zinc-600">No summary generated.</span>
-              )}
-            </p>
-
-            <div className="mt-3 flex flex-wrap items-center gap-2">
-              {inv.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className={`rounded px-2 py-0.5 text-xs ring-1 ring-inset ${TAG_STYLE[tag]}`}
-                >
-                  {tag}
-                </span>
+              <span className="hidden text-xs text-faint md:inline">
+                NASA microgravity fire evidence, graded
+              </span>
+            </a>
+            <nav className="-mx-4 flex overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:px-0" aria-label="Sections">
+              {NAV.map((n) => (
+                <a key={n.view} href={href(n.view)} aria-current={view === n.view ? 'page' : undefined}
+                  className={`whitespace-nowrap border-b-2 px-3 pb-2.5 pt-1 text-sm ${
+                    view === n.view ? 'border-flame text-ink' : 'border-transparent text-dim hover:text-ink'
+                  }`}>
+                  {n.label}
+                </a>
               ))}
-              <span className="text-xs text-zinc-500">
-                {inv.family} ·{' '}
-                {inv.testCount > 0
-                  ? `${inv.testCount} tests`
-                  : 'metadata only, no test table'}
-                {inv.o2Range
-                  ? ` · O₂ ${(inv.o2Range[0] * 100).toFixed(1)}–${(inv.o2Range[1] * 100).toFixed(1)}%`
-                  : ''}
-              </span>
-            </div>
-          </article>
-        ))}
+            </nav>
+          </div>
+        </header>
 
-        <p className="pt-4 text-xs text-zinc-600">
-          {tests.length} individual test rows loaded. Summaries and tags are
-          model-written from PSI text; every number comes from the experimental
-          tables.
-        </p>
-      </main>
-    </div>
+        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6">
+          {view === 'evidence' && <EvidenceView params={params} />}
+          {view === 'gaps' && <GapMapView />}
+          {view === 'investigations' && <InvestigationsView params={params} />}
+          {view === 'tests' && <TestsView params={params} />}
+        </main>
+
+        <footer className="border-t border-line">
+          <p className="mx-auto max-w-6xl px-4 py-4 text-xs text-faint sm:px-6">
+            {meta.investigationCount} investigations · {meta.testCount.toLocaleString()} tests ·{' '}
+            {meta.numericO2Count.toLocaleString()} with a recorded oxygen level · Source: {meta.source},{' '}
+            {meta.license} · Data built {meta.generatedAt.slice(0, 10)}
+          </p>
+        </footer>
+      </div>
+    </ProvenanceProvider>
   )
 }
