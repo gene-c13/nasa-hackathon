@@ -6,6 +6,12 @@ dist/
 # path whose parent directory is excluded, so out/ is excluded by contents.
 pipeline/out/*
 !pipeline/out/enriched/
+# The raw PSI inputs are committed too (CC0, under 2 MB with the records'
+# change-history fields stripped). A build then needs no network at all, and
+# cannot be changed from under us: PSI's listing dropped an investigation the
+# day before submission. fetch.ts still refreshes anything that is missing.
+!pipeline/out/csv/
+!pipeline/out/investigations/
 .env
 .env.local
 .DS_Store

@@ -26,6 +26,7 @@ import {
   type InvestigationRecord,
   type SearchHit,
 } from './psi.ts'
+import { DOMAIN } from './domain.ts'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const OUT = resolve(here, 'out')
@@ -55,6 +56,19 @@ interface Manifest {
 
 const failures: Manifest['failures'] = []
 
+/**
+ * PSI records carry their own change history in `added` and `removed`, which
+ * nothing here reads and which is 8 of the 10 MB in the largest record. The
+ * records are committed so a build needs no network, so they are stored
+ * without it.
+ */
+function slim(record: InvestigationRecord): InvestigationRecord {
+  const copy = { ...record } as Record<string, unknown>
+  delete copy.added
+  delete copy.removed
+  return copy as unknown as InvestigationRecord
+}
+
 /** Safe filename: PSI table names contain spaces and slashes. */
 const safeName = (accession: string, fileName: string) =>
   `${accession}__${fileName.replace(/[\s/]+/g, '_')}`
@@ -77,31 +91,48 @@ async function main() {
     `  ${hits.length} investigations total, ${combustion.length} in ${RESEARCH_AREA}`,
   )
 
-  if (combustion.length !== EXPECTED_COUNT) {
+  // The set we fetch is the union of what the listing says today and what
+  // domain.ts knows about. The listing is not stable: on 15 Nov 2026 it
+  // dropped PSI-39 while the record endpoint still served it, and a fresh
+  // clone quietly built a 23-investigation dataset. Anything in domain.ts is
+  // fetched whether or not the listing mentions it; anything new in the
+  // listing is fetched and flagged, because domain.ts will need an entry.
+  const listed = new Set(combustion.map((h) => h.Accession))
+  const known = new Set(Object.keys(DOMAIN))
+  const accessions = [...new Set([...listed, ...known])].sort()
+
+  const dropped = [...known].filter((a) => !listed.has(a))
+  const unknown = [...listed].filter((a) => !known.has(a))
+  if (dropped.length) {
+    console.warn(`  ! Listing omits ${dropped.join(', ')}; fetching from domain.ts anyway.`)
+  }
+  if (unknown.length) {
+    console.warn(`  ! Listing has ${unknown.join(', ')} not in domain.ts — add family and phase.`)
+  }
+  if (accessions.length !== EXPECTED_COUNT) {
     console.warn(
-      `  ! Expected ${EXPECTED_COUNT} combustion investigations, found ${combustion.length}.`,
+      `  ! Expected ${EXPECTED_COUNT} combustion investigations, have ${accessions.length}.`,
     )
-    console.warn('    Not fatal — but check whether PSI added or removed any.')
   }
 
   // ---- 2. Full record for each ---------------------------------------------
   console.log('\nFetching full records...')
-  const records = await pool(combustion, 5, async (hit) => {
-    const file = resolve(INV_DIR, `${hit.Accession}.json`)
+  const records = await pool(accessions, 5, async (accession) => {
+    const file = resolve(INV_DIR, `${accession}.json`)
 
     if (existsSync(file)) {
       return JSON.parse(readFileSync(file, 'utf8')) as InvestigationRecord
     }
 
     try {
-      const res = await fetchWithRetry(investigationUrl(hit.Accession))
+      const res = await fetchWithRetry(investigationUrl(accession))
       const record = (await res.json()) as InvestigationRecord
-      writeFileSync(file, JSON.stringify(record, null, 2))
-      console.log(`  ${hit.Accession.padEnd(8)} ${record.investigationAcronym || '—'}`)
+      writeFileSync(file, JSON.stringify(slim(record), null, 2))
+      console.log(`  ${accession.padEnd(8)} ${record.investigationAcronym || '—'}`)
       return record
     } catch (err) {
-      failures.push({ what: `record ${hit.Accession}`, error: String(err) })
-      console.error(`  ${hit.Accession.padEnd(8)} FAILED: ${err}`)
+      failures.push({ what: `record ${accession}`, error: String(err) })
+      console.error(`  ${accession.padEnd(8)} FAILED: ${err}`)
       return null
     }
   })

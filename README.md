@@ -7,10 +7,10 @@ Data source: NASA Physical Science Informatics (PSI), CC0-1.0.
 
 ## Layout
 
-    pipeline/   PSI fetch, unit normalisation, evidence grading  (Role A)
-    api/        /api/ask — grounded question answering           (Role A)
-    web/        Vite + React + Tailwind + Recharts dashboard     (Role B)
-    shared/     types.ts (frozen contract), evidence.ts, generated data.json
+    pipeline/   PSI fetch, unit normalisation, evidence grading, gap report  (Role A)
+    api/        /api/ask — grounded question answering                       (Role A)
+    web/        Vite + React + Tailwind dashboard                            (Role B)
+    shared/     types.ts (frozen contract), evidence.ts, gaps.ts, generated data.json
 
 ## Setup
 
@@ -28,9 +28,26 @@ output.
 
     npm run dev --prefix web            # dashboard and /api/ask at localhost:5173
     npm run build --prefix pipeline     # fetch -> normalize -> grade -> enrich
+    npm run gaps --prefix pipeline      # coverage gap report and the pitch's self-tests
     npm run ask --prefix api -- "Will PMMA burn at 34% oxygen?"
 
-`shared/data.json` is generated. Do not edit it by hand.
+`shared/data.json` is generated. Do not edit it by hand. Rebuilding it from a
+fresh clone with no API key reproduces the committed file byte for byte,
+except for the build timestamp in `meta.generatedAt`.
+
+## Self-tests
+
+`grade` and `gaps` each end with a block of checks and refuse to write if one
+fails. They are the figures the project quotes, asserted against the rows
+rather than typed in:
+
+    no solid material tested in microgravity above 22.2% oxygen
+    zero flame-spread tests at or above the 30% habitat floor
+    476 tests clear the oxygen floor; 66 also clear the 10.2 psi ceiling,
+      and all 66 are gas burner flames
+    every incomparable family pair returns its own physical reason
+
+If a number on a slide stops being true, the build says so.
 
 ## /api/ask
 
@@ -57,6 +74,11 @@ Served in development by `web/vite-plugin-ask.ts`, Connect middleware in the
 Vite dev server, so there is no second process to start. `handleAsk` in
 `api/ask.ts` is transport-free and can be mounted on a serverless function
 unchanged.
+
+The fact builder lives in `api/facts.ts` with no Node or SDK imports, so the
+browser runs the same code: when the endpoint is unreachable, the Ask screen
+grades the pinned demo questions locally from the bundled data and shows the
+same facts the endpoint would.
 
 ## Conventions
 
