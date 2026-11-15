@@ -56,13 +56,48 @@ export function GapMapView() {
         </p>
       </section>
 
-      <section className="grid gap-3 sm:grid-cols-3">
-        <Stat value={String(solidsInBand)} tone="gap"
-          label={`solid-material tests at habitat oxygen levels (${pct(HABITAT.o2Min, 0)} or more)`} />
-        <Stat value={pct(solidMax)} label="highest oxygen level any solid material was tested at" />
-        <Stat value={anyInBand.toLocaleString()}
-          label={`tests of any kind at ${pct(HABITAT.o2Min, 0)} oxygen or more, all of them ${bandFamilies} tests`} />
+      {/*
+        One number is the finding; the other two are its context. They were
+        three equal tiles, which gave the zero the same weight as the figures
+        that explain it. Now the zero leads at full size and the context sits
+        beside it, smaller, with its units.
+      */}
+      <section className="flex flex-col gap-4 sm:flex-row sm:items-stretch">
+        <div className="hatch flex-1 rounded-lg border border-dashed border-line-strong p-5">
+          <p className="text-6xl font-semibold leading-none sm:text-7xl">{solidsInBand}</p>
+          <p className="mt-3 max-w-sm text-dim">
+            solid-material tests at habitat oxygen levels ({pct(HABITAT.o2Min, 0)} or more)
+          </p>
+        </div>
+        <dl className="flex flex-col justify-center gap-5 rounded-lg border border-line bg-panel p-5 sm:w-80">
+          <div>
+            <dd className="text-2xl font-semibold">{pct(solidMax)}</dd>
+            <dt className="text-sm text-dim">highest oxygen level any solid material was tested at</dt>
+          </div>
+          <div>
+            <dd className="text-2xl font-semibold">{anyInBand.toLocaleString()}</dd>
+            <dt className="text-sm text-dim">
+              tests of any kind at {pct(HABITAT.o2Min, 0)} oxygen or more, all of them {bandFamilies} tests
+            </dt>
+          </div>
+        </dl>
       </section>
+
+      <p className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-faint" aria-label="Legend">
+        <span className="inline-flex items-center gap-2">
+          <span className="inline-block h-4 w-4 rounded-sm" style={{ background: 'rgb(79 209 165 / 0.4)' }} />
+          <span className="inline-block h-4 w-4 rounded-sm" style={{ background: 'rgb(79 209 165 / 1)' }} />
+          fewer to more tests
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <span className="hatch inline-block h-4 w-4 rounded-sm border border-dashed border-line" />
+          no test
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <span className="hatch-flame inline-block h-4 w-4 rounded-sm border border-dashed border-flame/30" />
+          no test, inside the habitat band
+        </span>
+      </p>
 
       {groups.map((g) => (
         <FamilyGrid key={g.family} family={g.family} rows={g.rows} />
@@ -87,15 +122,6 @@ export function GapMapView() {
           </li>
         </ul>
       </section>
-    </div>
-  )
-}
-
-function Stat({ value, label, tone }: { value: string; label: string; tone?: 'gap' }) {
-  return (
-    <div className={`rounded-lg border p-4 ${tone === 'gap' ? 'hatch border-dashed border-line-strong' : 'border-line bg-panel'}`}>
-      <p className="font-mono text-4xl tabular-nums">{value}</p>
-      <p className="mt-1 text-sm text-dim">{label}</p>
     </div>
   )
 }
@@ -162,7 +188,9 @@ function Row({ name, family, total, withO2 }: { name: string; family: Family; to
               className={`h-10 rounded-sm border border-dashed ${inBand ? 'hatch-flame border-flame/30' : 'hatch border-line'}`} />
           )
         }
-        const strength = 0.25 + 0.75 * (Math.log(n + 1) / Math.log(PEAK + 1))
+        // Floor of 0.4: at 0.25 a one-test cell measured 1.70:1 against the
+        // panel, below the 2:1 contrast floor, so the fill was all but invisible.
+        const strength = 0.4 + 0.6 * (Math.log(n + 1) / Math.log(PEAK + 1))
         return (
           <a key={bin} title={title} aria-label={title}
             href={href('tests', {

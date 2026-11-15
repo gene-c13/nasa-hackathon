@@ -5,11 +5,16 @@
  * taller ticks mean more tests. The orange line is the atmosphere being asked
  * about, and the hatched band is the planned Moon habitat. When the orange
  * line sits in empty space, that emptiness is the finding.
+ *
+ * The ticks are one neutral colour on purpose. They used to take the colour
+ * of the current grade, so dragging the slider repainted every tick from green
+ * to yellow to grey — but the ticks are the same tests whatever is asked, and
+ * the grade already lives in the badge above. Colour follows the thing, not
+ * the question.
  */
 import { HABITAT } from '@shared/evidence'
-import type { Grade, TestRow } from '@shared/types'
-import { pct } from '../lib/format'
-import { GRADE_COLOR } from './Grade'
+import type { TestRow } from '@shared/types'
+import { pct, plural } from '../lib/format'
 
 const MIN = 0.1
 const MAX = 0.9
@@ -18,7 +23,7 @@ const H = 120
 const BASE = 84
 const x = (o2: number) => ((Math.min(MAX, Math.max(MIN, o2)) - MIN) / (MAX - MIN)) * W
 
-export function O2Strip({ rows, query, grade }: { rows: TestRow[]; query: number; grade: Grade }) {
+export function O2Strip({ rows, query }: { rows: TestRow[]; query: number }) {
   // Group to half a percentage point so stacked tests read as one taller tick.
   const groups = new Map<number, number>()
   for (const r of rows) {
@@ -57,7 +62,15 @@ export function O2Strip({ rows, query, grade }: { rows: TestRow[]; query: number
 
       {[...groups.entries()].map(([o2, n]) => {
         const h = 10 + 38 * (Math.log(n + 1) / Math.log(peak + 1))
-        return <rect key={o2} x={x(o2) - 2} y={BASE - h} width={4} height={h} fill={GRADE_COLOR[grade === 'no-data' ? 'no-data' : grade]} opacity={0.9} />
+        return (
+          // A 4px tick is not a hover target. The transparent rect behind it
+          // is, and carries the count as a native tooltip.
+          <g key={o2}>
+            <title>{`${plural(n, 'test')} at ${pct(o2)} oxygen`}</title>
+            <rect x={x(o2) - 12} y={22} width={24} height={BASE - 22} fill="transparent" />
+            <rect x={x(o2) - 2} y={BASE - h} width={4} height={h} fill="var(--color-ink)" opacity={0.85} />
+          </g>
+        )
       })}
 
       <line x1={qx} x2={qx} y1={14} y2={BASE} stroke="var(--color-flame)" strokeWidth={2.5} />

@@ -62,7 +62,7 @@ export function EvidenceView({ params }: { params: URLSearchParams }) {
       <section className="rounded-lg border border-line bg-panel p-4 sm:p-5">
         <div className="grid gap-5 md:grid-cols-[1fr_1.4fr_1fr]">
           <label className="block">
-            <span className="font-mono text-xs uppercase tracking-wider text-faint">Material</span>
+            <span className="text-sm text-dim">Material</span>
             <select
               value={material}
               onChange={(e) => set({ m: e.target.value })}
@@ -84,7 +84,7 @@ export function EvidenceView({ params }: { params: URLSearchParams }) {
 
           <label className="block">
             <span className="flex items-baseline justify-between">
-              <span className="font-mono text-xs uppercase tracking-wider text-faint">Oxygen</span>
+              <span className="text-sm text-dim">Oxygen</span>
               <span className="font-mono text-lg text-flame">{o2Pct}%</span>
             </span>
             <input
@@ -104,7 +104,7 @@ export function EvidenceView({ params }: { params: URLSearchParams }) {
           </label>
 
           <label className="block">
-            <span className="font-mono text-xs uppercase tracking-wider text-faint">Pressure</span>
+            <span className="text-sm text-dim">Pressure</span>
             <select
               value={pressure}
               onChange={(e) => set({ p: e.target.value })}
@@ -236,19 +236,20 @@ function FamilyResult({
 
       <div className="mt-5 overflow-x-auto rounded border border-line bg-canvas/60 px-3 pb-1 pt-3">
         <div className="min-w-[38rem]">
-          <O2Strip rows={mf.withO2} query={o2} grade={result.grade} />
+          <O2Strip rows={mf.withO2} query={o2} />
         </div>
       </div>
       <p className="mt-2 text-xs text-faint">
         Every tick is an oxygen level where {material} was tested in this family:{' '}
         {plural(mf.withO2.length, 'test')} from {pct(mf.o2Range![0])} to {pct(mf.o2Range![1])}.
+        Taller ticks mean more tests; hover one for the count.
         {mf.rows.length > mf.withO2.length &&
           ` A further ${mf.rows.length - mf.withO2.length} have no oxygen level recorded.`}
       </p>
 
       {shown.length > 0 && (
         <div className="mt-5">
-          <h3 className="mb-2 font-mono text-xs uppercase tracking-wider text-faint">
+          <h3 className="mb-2 text-sm font-medium text-dim">
             {noData
               ? 'Nearest evidence (not a match)'
               : result.grade === 'bounded'
@@ -268,7 +269,7 @@ function FamilyResult({
 function FamilyHeading({ family }: { family: Family }) {
   return (
     <div>
-      <h2 className="font-mono text-xs uppercase tracking-wider text-dim">{FAMILY_LABEL[family]} tests</h2>
+      <h2 className="text-base font-semibold">{FAMILY_LABEL[family]} tests</h2>
       <p className="text-sm text-faint">{FAMILY_BLURB[family]}</p>
     </div>
   )
