@@ -9,7 +9,8 @@
     "build": "npm run fetch && npm run normalize && npm run grade && npm run enrich",
     "mock": "tsx mock.ts",
     "typecheck": "tsc --noEmit",
-    "enrich": "tsx enrich.ts"
+    "enrich": "tsx enrich.ts",
+    "gaps": "tsx gaps.ts"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
