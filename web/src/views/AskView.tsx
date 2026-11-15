@@ -13,11 +13,12 @@
  */
 import { useEffect, useState } from 'react'
 import { cannedReading, SUGGESTIONS } from '@api/canned.ts'
+import { buildFacts } from '@api/facts.ts'
 import { blockReason, gradeEvidence } from '@shared/evidence'
 import type { Family, Grade, TestRow } from '@shared/types'
 import { GRADE_MEANING, GradeBadge } from '../components/Grade'
 import { RowList } from '../components/RowList'
-import { investigationByAccession, tests } from '../data'
+import { dataset, investigationByAccession, tests } from '../data'
 import { atm, FAMILY_LABEL, pct, psi } from '../lib/format'
 import { href, navigate } from '../lib/route'
 
@@ -73,19 +74,17 @@ function answerInBrowser(question: string): Answer | null {
     family: reading.family,
   })
   const rows = [...result.matches, ...result.nearest]
-  const lead =
-    result.grade === 'measured'
-      ? `${result.matches.length} test(s) of ${reading.material} exist at ${pct(reading.o2Fraction)} oxygen.`
-      : result.grade === 'bounded'
-        ? `No test of ${reading.material} at exactly ${pct(reading.o2Fraction)} oxygen.`
-        : `No test of ${reading.material} at ${pct(reading.o2Fraction)} oxygen exists in the PSI combustion data.`
-  const facts = [lead, ...(result.caveat ? [result.caveat] : [])]
+  // The same fact builder the endpoint uses, so an offline answer is not a
+  // thinner answer. The wording mirrors the endpoint's rule-based path: the
+  // per-row and licence lines are shown in their own places below.
+  const facts = buildFacts(result, reading, dataset)
+  const prose = facts.filter((f) => !/^(Nearest available evidence:|Source:)/.test(f))
 
   return {
     question,
     interpretation: reading,
     grade: result.grade,
-    answer: facts.join(' '),
+    answer: prose.join(' '),
     facts,
     matches: result.matches,
     nearest: result.nearest,
@@ -162,7 +161,7 @@ export function AskView({ params }: { params: URLSearchParams }) {
         }}
       >
         <label className="block">
-          <span className="font-mono text-xs uppercase tracking-wider text-faint">Your question</span>
+          <span className="text-sm text-dim">Your question</span>
           <div className="mt-1.5 flex flex-col gap-2 sm:flex-row">
             <input
               value={draft}
@@ -199,7 +198,7 @@ export function AskView({ params }: { params: URLSearchParams }) {
 
       <div aria-live="polite">
         {current?.status === 'loading' && (
-          <p className="rounded-lg border border-line bg-panel p-5 text-dim">Checking the test tables…</p>
+          <p className="text-dim">Checking the test tables…</p>
         )}
         {current?.status === 'failed' && <Failed message={current.message} />}
         {current?.status === 'done' && <Result a={current.answer} />}
@@ -211,7 +210,7 @@ export function AskView({ params }: { params: URLSearchParams }) {
 function Failed({ message }: { message: string }) {
   const down = message === 'unreachable' || message === 'Failed to fetch'
   return (
-    <div className="rounded-lg border border-line-strong bg-panel p-5">
+    <div className="border-l-2 border-line-strong pl-4">
       <p className="text-lg">
         {down ? 'The question service cannot be reached right now.' : 'That question could not be answered.'}
       </p>
@@ -234,10 +233,10 @@ function Result({ a }: { a: Answer }) {
   const noData = a.grade === 'no-data'
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-8">
       <section>
-        <h2 className="font-mono text-xs uppercase tracking-wider text-faint">1 · How your question was read</h2>
-        <div className="mt-2 rounded-lg border border-line bg-panel p-4">
+        <h2 className="text-base font-semibold">How your question was read</h2>
+        <div className="mt-3">
           {known ? (
             <dl className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4">
               <Read label="Material" value={r.material} />
@@ -265,7 +264,7 @@ function Result({ a }: { a: Answer }) {
       </section>
 
       <section>
-        <h2 className="font-mono text-xs uppercase tracking-wider text-faint">2 · What the test tables say</h2>
+        <h2 className="text-base font-semibold">What the test tables say</h2>
         <article className={`mt-2 rounded-lg border p-4 sm:p-5 ${noData ? 'hatch border-dashed border-line-strong' : 'border-line bg-panel'}`}>
           <div className="flex flex-wrap items-center gap-3">
             <GradeBadge grade={a.grade} size="lg" />
@@ -282,7 +281,7 @@ function Result({ a }: { a: Answer }) {
 
           {shown.length > 0 && (
             <div className="mt-5">
-              <h3 className="mb-2 font-mono text-xs uppercase tracking-wider text-faint">
+              <h3 className="mb-2 text-sm font-medium text-dim">
                 {noData ? 'Nearest evidence (not a match)' : `Tests behind this answer (${shown.length})`}
               </h3>
               <RowList rows={shown.slice(0, 6)} />
@@ -305,14 +304,11 @@ function Result({ a }: { a: Answer }) {
       </section>
 
       <section>
-        <h2 className="font-mono text-xs uppercase tracking-wider text-faint">3 · The facts the wording was allowed to use</h2>
-        <div className="mt-2 rounded-lg border border-line bg-panel p-4">
+        <h2 className="text-base font-semibold">The facts the wording was allowed to use</h2>
+        <div className="mt-3">
           <ul className="space-y-1.5 text-sm text-dim">
             {a.facts.map((f, i) => (
-              <li key={i} className="flex gap-2">
-                <span className="font-mono text-faint">{i + 1}</span>
-                <span>{f}</span>
-              </li>
+              <li key={i}>{f}</li>
             ))}
           </ul>
           <p className="mt-3 text-xs text-faint">
