@@ -65,10 +65,11 @@ export interface Comparability {
 /** Can results from these two families be placed on the same axis? */
 export function canCompare(a: Family, b: Family): Comparability {
   if (a === b) return { ok: true, reason: 'Same test family.' }
-  const key = [a, b].sort().join('|')
+  // The table lists each pair once, in no particular order, so try both.
+  const reason = INCOMPARABLE[`${a}|${b}`] ?? INCOMPARABLE[`${b}|${a}`]
   return {
     ok: false,
-    reason: INCOMPARABLE[key] ?? 'Different test families measure different quantities.',
+    reason: reason ?? 'Different test families measure different quantities.',
   }
 }
 
